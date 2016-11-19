@@ -4,9 +4,9 @@ from flask import Flask, render_template, send_from_directory, request, abort, s
 from flask_mysqldb import MySQL
 
 app = Flask(__name__)
-app.config['MYSQL_DATABASE_USER'] = 'kipomur'
-app.config['MYSQL_DATABASE_PASSWORD'] = 'praiseMUR'
-app.config['MYSQL_DATABASE_DB'] = 'miptvkbot'
+app.config['MYSQL_USER'] = 'kipomur'
+app.config['MYSQL_PASSWORD'] = 'praiseMUR'
+app.config['MYSQL_DB'] = 'miptvkbot'
 mysql = MySQL(app)
 
 @app.route('/')
