@@ -1,27 +1,13 @@
 <!DOCTYPE html>
 <html>
-    <head>
-      <meta charset="utf-8">
-      <title>Главная страница</title>
-
-<script src="https://vk.com/js/api/openapi.js?136" type="text/javascript"></script>
-
-    </head>
-    <body>
-
-<div id="vk_auth"></div>
-<script type="text/javascript">
-window.onload = function () {
- VK.init({apiId: 5737145});
- VK.Widgets.Auth('vk_auth', {});
-}
-</script>
-
-<p>
-start<br>
-{{ session }}<br>
-end<br>
-</p>
-
-    </body>
+	<head>
+		<script src="https://vk.com/js/api/openapi.js?136" type="text/javascript"></script>
+	</head>
+	<body>
+		<p>hash: {{ vkhash }}</p>
+		<p><a href="/secret">Secret</a></p>
+		{% if session.get('vkid', None) is none %}
+			<p><a href="/auth">Авторизация</a></p>
+		{% endif %}
+	</body>
 </html>
