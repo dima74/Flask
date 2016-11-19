@@ -2,10 +2,12 @@
 from flask import Flask, render_template, send_from_directory, request, abort, session, redirect, url_for, g
 from hashlib import md5
 from functools import wraps
-#md5.new('').digest()
 
 app = Flask("Simple app")
 template_dir = 'templates'
+
+APP_ID = '5737145'
+SECRET_KEY = '2834bLZVu3IIfPtDkwI5'
 
 def login_required(f):
 	@wraps(f)
@@ -13,6 +15,12 @@ def login_required(f):
 		if not 'vkid' in session:
 			session['next'] = request.url
 			return redirect(url_for('auth'))
+		
+		if session.get('vkhash', None) != md5((APP_ID + session['vkid'] + SECRET_KEY).encode('utf-8')).hexdigest():
+			session.clear()
+			session['next'] = request.url
+			return redirect(url_for('auth'))
+		
 		return f(*args, **kwargs)
 	return decorated_function
 
