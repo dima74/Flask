@@ -3,7 +3,6 @@ from flask import Flask, render_template, send_from_directory, request, abort, s
 from hashlib import md5
 from functools import wraps
 
-<<<<<<< HEAD
 from flask import make_response
 import pymysql
 
