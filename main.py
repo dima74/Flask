@@ -1,22 +1,14 @@
 # -*- coding: utf-8 -*-
 
 from flask import Flask, render_template, send_from_directory, request, abort, session, redirect
-from flask_mysqldb import MySQL
 
-app = Flask(__name__)
-#app.config['MYSQL_USER'] = 'test'
-#app.config['MYSQL_PASSWORD'] = 'pass'
-app.config['MYSQL_USER'] = 'kipomur'
-app.config['MYSQL_PASSWORD'] = 'praiseMUR'
-app.config['MYSQL_DB'] = 'miptvkbot'
-mysql = MySQL(app)
+app = Flask("Simple app")
 
-@app.route('/')
+template_dir = 'templates'
+
+@app.route('/test')
 def users():
-    cur = mysql.connection.cursor()
-    cur.execute('''SELECT * FROM x''')
-    rv = cur.fetchall()
-    return str(rv)
+    return render_template('index.html')
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0')
+    app.run(debug=True, port=80)
