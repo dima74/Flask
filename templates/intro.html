@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Главная страница</title>
+        <script src="https://vk.com/js/api/openapi.js?136" type="text/javascript"></script>
+        <link rel="stylesheet" type="text/css" href="../css/base.css">
+    </head>
+    <body>
+
+		<p>hash: {{ vkhash }}</p>
+		<p><a href="/secret">Secret</a></p>
+		{% if session.get('vkid', None) is none %}
+			<p><a href="/auth">Авторизация</a></p>
+		{% endif %}
+	</body>
+</html>
