@@ -6,9 +6,9 @@ app = Flask("Simple app")
 
 template_dir = 'templates'
 
-@app.route('/test')
+@app.route('/')
 def users():
-    return render_template('index.html')
+    return render_template('index.html', session=session)
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=80)
