@@ -27,7 +27,7 @@ template_dir = 'templates'
 
 def getDataBase():
     # return pymysql.connect(SERVER_ADDRESS, MYSQL_USER, MYSQL_PASS, MYSQL_DB, charset="utf8")
-    return pymysql.connect(SERVER_ADDRESS, MYSQL_USER, MYSQL_PASS, MYSQL_DB)
+    return pymysql.connect(SERVER_ADDRESS, MYSQL_USER, MYSQL_PASS, MYSQL_DB, use_unicode=True, charset="utf8")
 
 
 @app.route('/chat/search', methods=['GET', 'POST'])
@@ -131,7 +131,7 @@ def chatPage():
     # search_sring = urllib.unquote(unicode(request.args.get('search', "")))
     search_string = request.args.get('search', "")
     # print("search_sring = ", search_string)
-    search_string = search_string.decode("utf-8")
+    search_string = search_string.encode("utf-8")
     print("search_sring = ", search_string)
 
     messageContentFilter = "AND INSTR(Messages.content, '%s') > 0" % search_string if search_string else ""
