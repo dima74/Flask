@@ -19,6 +19,17 @@ app = Flask("Simple app")
 template_dir = 'templates'
 
 
+@app.route('/chat')
+def chat_render():
+    messages = [("msg1", [("t1", "n1", "http://ya.ru")] * 2), ("msg2", [("t2", "n2", "http://google.com")] * 3)]
+    return render_template("chat.html", messages=messages)
+
+
+@app.route('/css/<path:path>')
+def send_js(path):
+    return send_from_directory('css', path)
+
+
 @app.route('/iter_data_base')
 def fetchdb():
     db = pymysql.connect("localhost", "amarokuser", "7966915", "amarokdb")
@@ -109,4 +120,4 @@ def auth_success():
 
 if __name__ == '__main__':
     app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
-    app.run(debug=True, host='0.0.0.0', port=80)
+    app.run(debug=True, host='0.0.0.0')

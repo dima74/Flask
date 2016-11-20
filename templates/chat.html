@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Главная страница</title>
+        <script src="https://vk.com/js/api/openapi.js?136" type="text/javascript"></script>
+        <link rel="stylesheet" type="text/css" href="/css/base.css">
+    </head>
+    <body>
+    <div id="main">
+        <div id="header">
+            ШАПКА
+            <div id="logo">
+                Здесь логотип
+            </div>
+            КОНЕЦ ШАПКИ
+        </div>
+        <div id="content">
+            <div id="search">Поиск</div>
+            <div id="messages">
+                {% for message_id, attachments in messages %}
+                    <div class="message">
+                        msg={{ message_id }}
+                        {% for type, name, internal_url in attachments %}
+                            <div class="attachment">
+                            <p>
+                            type = {{ type }}
+                            </p>
+                            <p>
+                            name = {{ name }}
+                            </p>
+                            <p>
+                            <a href="{{ internal_url }}">ссыль на Вложение</a>
+                            </p>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+	</body>
+</html>
