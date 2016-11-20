@@ -10,7 +10,7 @@ SECRET_KEY = '2834bLZVu3IIfPtDkwI5'
 # MYSQL_PASS = "praiseMUR"
 # MYSQL_DB = "miptvkbot"
 MYSQL_USER = "root"
-MYSQL_PASS = ""
+MYSQL_PASS = "7966915"
 MYSQL_DB = "test"
 
 app = Flask("Simple app")
