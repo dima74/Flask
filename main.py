@@ -48,10 +48,7 @@ def login_required(f):
         #     session.clear()
         #     session['next'] = request.url
         #     return redirect('/intro')
-        print('hashpart' not in session)
-        print(session.get('vkhash', None))
-        print(md5((session['hashpart'] + SECRET_KEY).encode('utf-8')))
-        if 'hashpart' not in session or session.get('vkhash', None) != md5((session['hashpart'] + SECRET_KEY).encode('utf-8')).hexdigest():
+        if 'vkhashpart' not in session or session.get('vkhash', None) != md5((session['vkhashpart'] + SECRET_KEY).encode('utf-8')).hexdigest():
             session.clear()
             session['next'] = request.url
             return redirect('/oauth')
@@ -166,4 +163,4 @@ def print_cookie():
 
 if __name__ == '__main__':
     app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
-    app.run(debug=True, host='0.0.0.0', port=80)
+    app.run(debug=True, host='0.0.0.0')
