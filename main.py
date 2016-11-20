@@ -6,15 +6,14 @@ import pymysql
 
 APP_ID = '5737145'
 SECRET_KEY = '2834bLZVu3IIfPtDkwI5'
-# MYSQL_USER = "kipomur"
-# MYSQL_PASS = "praiseMUR"
-# MYSQL_DB = "miptvkbot"
+MYSQL_USER = "kipomur"
+MYSQL_PASS = "praiseMUR"
+MYSQL_DB = "miptvkbot"
+SERVER_ADDRESS = "10.55.166.244"
+# SERVER_ADDRESS = "localhost"
 # MYSQL_USER = "root"
 # MYSQL_PASS = "7966915"
 # MYSQL_DB = "test"
-MYSQL_USER = "root"
-MYSQL_PASS = ""
-MYSQL_DB = "test"
 
 app = Flask("Simple app")
 template_dir = 'templates'
@@ -27,7 +26,7 @@ def send_js(path):
 
 @app.route('/iter_data_base')
 def fetchdb():
-    db = pymysql.connect("localhost", "amarokuser", "7966915", "amarokdb")
+    db = pymysql.connect(SERVER_ADDRESS, "amarokuser", "7966915", "amarokdb", charset="utf8")
     cursor = db.cursor()
     sql = "SELECT * FROM genres"
     try:
@@ -57,7 +56,7 @@ def login_required(f):
 @app.route('/')
 @login_required
 def main():
-    db = pymysql.connect("localhost", MYSQL_USER, MYSQL_PASS, MYSQL_DB)
+    db = pymysql.connect(SERVER_ADDRESS, MYSQL_USER, MYSQL_PASS, MYSQL_DB, charset="utf8")
     cursor = db.cursor()
     sql = "SELECT chatId FROM ChatsToUsers WHERE userId = " + session['vkid']
     try:
@@ -70,7 +69,7 @@ def main():
 
 
 def runSql(sql):
-    db = pymysql.connect("localhost", MYSQL_USER, MYSQL_PASS, MYSQL_DB)
+    db = pymysql.connect(SERVER_ADDRESS, MYSQL_USER, MYSQL_PASS, MYSQL_DB, charset="utf8")
     cursor = db.cursor()
     try:
         cursor.execute(sql)
@@ -84,20 +83,23 @@ def runSql(sql):
 # @login_required
 def chatPage():
     chatId = request.args.get('chatId')
-    chatName = runSql("SELECT name FROM ChatNames WHERE chatId = %s" % (chatId))[0][0]
+    chatName = runSql("SELECT name FROM ChatNames WHERE chatId = %s" % (chatId))
     sql = """SELECT Messages.messageId, Messages.content, UserNames.name
              FROM Messages, UserNames
              WHERE Messages.userId = UserNames.userId AND Messages.chatId = %s""" % (chatId)
     messages = runSql(sql)
+    print(chatId)
     print(messages)
     print()
     print()
-    concat = lambda tup, elem: tuple(list(tup) + [elem])
+    tuple_append = lambda tup, elem: tuple(list(tup) + [elem])
     messages_new = []
     for message in messages:
         print(message)
         sql2 = "SELECT type, path, name FROM FileLinks WHERE messageId = %d" % (message[0])
         files = runSql(sql2)
+        if not files:
+            continue
         print(files)
         # nameType = dict(zip(range(1, 6), ["photo", "video", "audio", "doc", "link"]))
         # attachments = dict(zip(["photo", "video", "audio", "doc", "link"], [[] for i in range(6)]))
@@ -110,10 +112,10 @@ def chatPage():
         print('dict = ', dict(zip(("photo", "video", "audio", "doc", "link"), attachments)))
         print()
         messages_new.append(dict(zip(("messageId", "messageContent", "userName", "files"),
-                                     concat(message, dict(zip(("photo", "video", "audio", "doc", "link"), attachments))))))
-        print('concat = ', concat(message, dict(zip(("photo", "video", "audio", "doc", "link"), attachments))))
+                                     tuple_append(message, dict(zip(("photo", "video", "audio", "doc", "link"), attachments))))))
+        print('concat = ', tuple_append(message, dict(zip(("photo", "video", "audio", "doc", "link"), attachments))))
         print('dict = ', dict(zip(("messageId", "messageContent", "userName", "files"),
-                                  concat(message, dict(zip(("photo", "video", "audio", "doc", "link"), attachments))))))
+                                  tuple_append(message, dict(zip(("photo", "video", "audio", "doc", "link"), attachments))))))
     print()
     for message in messages_new:
         print(message)
@@ -121,7 +123,6 @@ def chatPage():
     # print(messages_new[0]['messageId'])
     # print('after')
     return render_template('chat.html', messages=messages_new, chatName=chatName)
-    # return '1'
 
 
 @app.route('/intro')
