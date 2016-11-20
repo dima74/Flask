@@ -6,11 +6,18 @@ from functools import wraps
 from flask import make_response
 import pymysql
 
+APP_ID = '5737145'
+SECRET_KEY = '2834bLZVu3IIfPtDkwI5'
+# MYSQL_USER = "kipomur"
+# MYSQL_PASS = "praiseMUR"
+# MYSQL_DB = "miptvkbot"
+MYSQL_USER = "root"
+MYSQL_PASS = ""
+MYSQL_DB = "test"
+
 app = Flask("Simple app")
 template_dir = 'templates'
 
-APP_ID = '5737145'
-SECRET_KEY = '2834bLZVu3IIfPtDkwI5'
 
 @app.route('/iter_data_base')
 def fetchdb():
@@ -24,40 +31,81 @@ def fetchdb():
     except:
         abort(501)
 
+
 def login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
         if not 'vkid' in session:
             session['next'] = request.url
             return redirect(url_for('auth'))
-        
+
         if session.get('vkhash', None) != md5((APP_ID + session['vkid'] + SECRET_KEY).encode('utf-8')).hexdigest():
             session.clear()
             session['next'] = request.url
-            return redirect(url_for('auth'))
-        
+            return redirect('/intro')
+
         return f(*args, **kwargs)
+
     return decorated_function
 
+
 @app.route('/')
-def main():
-    return render_template('index.html', vkhash=session.get('vkid', None))
-
-@app.route('/secret')
 @login_required
-def secret():
-    return "Secret!"
-    pass
+def main():
+    db = pymysql.connect("localhost", MYSQL_USER, MYSQL_PASS, MYSQL_DB)
+    cursor = db.cursor()
+    sql = "SELECT chatId FROM ChatsToUsers WHERE userId = " + session['vkid']
+    try:
+        cursor.execute(sql)
+        chatIds = cursor.fetchall()
+        return render_template('index.html', rv=chatIds)
+    except:
+        abort(501)
+        # return render_template('index.html', vkhash=session.get('vkid', None))
 
-@app.route('/auth')
+
+def runSql(sql):
+    db = pymysql.connect("localhost", MYSQL_USER, MYSQL_PASS, MYSQL_DB)
+    cursor = db.cursor()
+    try:
+        cursor.execute(sql)
+        rv = cursor.fetchall()
+        return rv
+    except:
+        abort(501)
+
+
+@app.route('/chat')
+# @login_required
+def chatPage():
+    chatId = request.args.get('chatId')
+    sql = """SELECT Messages.messageId, Messages.content, UserNames.name, ChatNames.name
+             FROM Messages, UserNames, ChatNames
+             WHERE Messages.chatId = ChatNames.chatId AND Messages.userId = UserNames.userId AND Messages.chatId = %s""" % (chatId)
+    messages = runSql(sql)
+    concat = lambda tup, elem: tuple(list(tup) + [elem])
+    messages_new = []
+    for message in messages:
+        sql2 = "SELECT type, path, name FROM FileLinks WHERE messageId = %d" % (message[0])
+        files = runSql(sql2)
+        files = [dict(zip(("type", "path", "name"), messageFile)) for messageFile in files]
+        messages_new.append(dict(zip(("messageId", "messageContent", "userName", "chatName", "files"), concat(message, files))))
+    # for message in messages_new:
+    #     print(message)
+    return render_template('test.html', messages=messages_new)
+
+
+@app.route('/intro')
 def auth():
-    return render_template('auth.html')
+    return render_template('intro.html')
+
 
 @app.route('/auth-success')
 def auth_success():
     session['vkid'] = request.args.get('uid')
     session['vkhash'] = request.args.get('hash')
     return redirect(session.get('next', "/"))
+
 
 if __name__ == '__main__':
     app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
