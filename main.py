@@ -26,7 +26,8 @@ template_dir = 'templates'
 
 
 def getDataBase():
-    return pymysql.connect(SERVER_ADDRESS, MYSQL_USER, MYSQL_PASS, MYSQL_DB, charset="utf8")
+    # return pymysql.connect(SERVER_ADDRESS, MYSQL_USER, MYSQL_PASS, MYSQL_DB, charset="utf8")
+    return pymysql.connect(SERVER_ADDRESS, MYSQL_USER, MYSQL_PASS, MYSQL_DB)
 
 
 @app.route('/chat/search', methods=['GET', 'POST'])
