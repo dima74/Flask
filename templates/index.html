@@ -1,95 +1,13 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Меню</title>
-    <link rel="stylesheet" href="css/bootstrap.min.css"/>
-    <link rel="stylesheet" href="css/style.css"/>
-    <link href="css/base.css" rel="stylesheet">
-    <link rel="stylesheet" href="css/sticky-footer.css">
-    <script src="js/jquery-1.11.1.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/mynavbar.js"></script>
-    <script src="https://vk.com/js/api/openapi.js?136" type="text/javascript"></script>
-    <script type="text/javascript">
-        VK.init({apiId: 5737145});
-    </script>
-</head>
-<body>
-
-<nav class="navbar navbar-default navbar-fixed-top">
-    <div class="container">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-main">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="#">KPM now</a>
-        </div>
-
-        <div class="collapse navbar-collapse" id="navbar-main">
-            <ul class="nav navbar-nav">
-                <li class="active">
-                    <a href="#">About <span class="sr-only">(current)</span></a>
-                </li>
-
-            </ul>
-
-
-            <div class="navbar-form pull-right">
-                <div class="wauth_content _wauth_content">
-                    <div class="_wauth_error wauth_error" style="display: none;"></div>
-                    <div class="_wauth_user_block wauth_user_block clear_fix">
-
-                    </div>
-
-
-                    <div id="vk_auth"></div>
-                    <script type="text/javascript">
-                        function vkoauth() {
-                            VK.Auth.login(function (response) {
-                                if (response.session) {
-                                    ses = response.session;
-                                    hashpart = `expire=${ses.expire}mid=${ses.mid}secret=${ses.secret}sid=${ses.sid}`;
-                                    window.location = `/oauth-success?uid=${ses.user.id}&first=${ses.user.first_name}&last=${ses.user.last_name}&sig=${ses.sig}&hashpart=${hashpart}`;
-                                }
-                            });
-                        }
-
-                        function vklogout() {
-                            VK.Auth.logout(null);
-                            window.location = '/logout';
-                        }
-                    </script>
-                    {% if not 'vkid' in session %}
-                    <button class="btn btn-primary wauth_auth _wauth_auth" onclick="vkoauth()">Войти через ВКонтакте</button>
-                    {% else %}
-                    {{ session['vkfirst'] }} {{ session['vklast'] }}
-                    <button class="btn btn-primary wauth_auth _wauth_auth" onclick="vklogout()">Выйти</button>
-                    {% endif %}
-                </div>
-            </div>
-        </div>
-    </div>
-</nav>
-
+{% extends "template.html" %}
+{% block main %}
 <div class="splash" style="background-position: 0px 0px;">
-    <div class="container">
-
-        <h1>Здесь вы найдете </h1>
-        <h1>полезную информацию из всех ваших диалогов </h1>
-
+    <div class="container" align="center_vertical">
+        {% block intro_title %}{% endblock %}
     </div>
 </div>
 
 <article>
-
     <div class="article container content">
-
         <div class="collapse navbar-collapse">
             {% block intro_content %}
 
@@ -97,11 +15,4 @@
         </div>
     </div>
 </article>
-
-<footer class="footer">
-    <div class="container">
-        <p class="text-muted">Made by KiPoMur in 2016</p>
-    </div>
-</footer>
-</body>
-</html>
+{% endblock %}
