@@ -131,26 +131,26 @@ def chatPage():
     # search_sring = urllib.unquote(unicode(request.args.get('search', "")))
     search_string = request.args.get('search', "")
     # print("search_sring = ", search_string)
-    search_string = search_string.encode("utf-8")
+    # search_string = search_string.encode("utf-8")
     print("search_sring = ", search_string)
 
     messageContentFilter = "AND INSTR(Messages.content, '%s') > 0" % search_string if search_string else ""
-    # print(0)
+    print(0)
     chatFilter = "AND Messages.chatId = '%s'" % chatId if chatId else "AND Messages.chatId IN (SELECT chatId FROM ChatsToUsers WHERE userId = '%s')" % session['vkid']
-    # print(1)
+    print(1)
     chatName = runSql("SELECT name FROM ChatNames WHERE chatId = '%s'" % chatId)[0][0] if chatId else None
-    # print(2)
-    # print("chatId = ", chatId)
-    # print("messageContentFilter = ", messageContentFilter)
-    # print("chatFilter = ", chatFilter)
+    print(2)
+    print("chatId = ", chatId)
+    print("messageContentFilter = ", messageContentFilter)
+    print("chatFilter = ", chatFilter)
     sql = """SELECT Messages.messageId, Messages.content, UserNames.name
              FROM Messages, UserNames
              WHERE Messages.userId = UserNames.userId %s %s""" % (chatFilter, messageContentFilter)
-    # print(sql)
+    print(sql)
     messages = runSql(sql)
-    # print(messages)
-    # print()
-    # print()
+    print(messages)
+    print()
+    print()
     tuple_append = lambda tup, elem: tuple(list(tup) + [elem])
     print(3)
     messages_new = []
