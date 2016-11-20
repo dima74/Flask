@@ -23,6 +23,8 @@
                     <div class="panel-footer">
                         <div class="attachment">
                             <div>
+
+                            {% if message["files"]["photo"] %}
                                 <div>
                                     <h4><span class="glyphicon glyphicon-picture" aria-hidden="true"> Pictures</span>
                                     </h4>
@@ -31,15 +33,19 @@
                                 {% for photo in message["files"]["photo"] %}
                                     <img src="{{ photo["path"] }}" class="img-polaroid"/>
                                 {% endfor %}
+                            {% endif %}
                             </div>
                             <div>
+                            {% if message["files"]["video"] or message["files"]["audio"] or
+                             message["files"]["link"] or message["files"]["doc"] %}
+
                                 <h4> Links </h4>
                                 <ul class="link-item">
                                     {% for other_type_name in ["video", "audio", "link", "doc"] %}
                                         {% for other in message["files"][other_type_name] %}
                                             <li>
                                                 <div class="atturl">
-                                                    <a href="#"><span class="glyphicon glyphicon-link" aria-hidden="true">
+                                                    <a href="#">
 {#                                                    <p>type={{ other_type_name }}</p>#}
                                                     <a href="{{ other["path"] }}">{{ other["name"] }}</a>
                                                     </span> </a>
@@ -48,7 +54,7 @@
                                         {% endfor %}
                                     {% endfor %}
                                 </ul>
-
+                            {% endif %}
                             </div>
                         </div>
                     </div>
