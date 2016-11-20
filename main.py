@@ -19,22 +19,47 @@ app = Flask("Simple app")
 template_dir = 'templates'
 
 
+def getDataBase():
+    return pymysql.connect(SERVER_ADDRESS, MYSQL_USER, MYSQL_PASS, MYSQL_DB, charset="utf8")
+
+
+@app.route('/chat/search', methods=['GET', 'POST'])
+def search():
+    print("render_search")
+    if request.method == "GET":
+        print("get")
+        db = getDataBase()
+        print("1")
+        c = db.cursor()
+        print("2")
+        print(request.form)
+        print('''select * from Messages where userId = %s''' % request.args['search'])
+        c.execute('''select * from Messages where userId = %s''' % request.args['search'])
+        print("3")
+        records = c.fetchall()
+        print("rec = ", records)
+        return render_template("results.html", records=records)
+    return render_template('chat.html')
+
+
 @app.route('/css/<path:path>')
-def send_js(path):
+def send_css(path):
     return send_from_directory('css', path)
 
 
-@app.route('/iter_data_base')
-def fetchdb():
-    db = pymysql.connect(SERVER_ADDRESS, "amarokuser", "7966915", "amarokdb", charset="utf8")
-    cursor = db.cursor()
-    sql = "SELECT * FROM genres"
-    try:
-        cursor.execute(sql)
-        rv = cursor.fetchall()
-        return render_template('iterdb.html', rv=rv)
-    except:
-        abort(501)
+@app.route('/fonts/<path:path>')
+def send_fonts(path):
+    return send_from_directory('fonts', path)
+
+
+@app.route('/js/<path:path>')
+def send_js(path):
+    return send_from_directory('js', path)
+
+
+@app.route('/img/<path:path>')
+def send_img(path):
+    return send_from_directory('img', path)
 
 
 def login_required(f):
@@ -82,12 +107,21 @@ def main():
 # @login_required
 def chatPage():
     chatId = request.args.get('chatId')
+    print("chatId =", chatId)
+    search_sring = request.args.get('search', None)
+    print(search_sring)
+    if search_sring is None or not search_sring:
+        queryFilter = ""
+    else:
+        queryFilter = """AND INSTR(Messages.content, '%s') > 0""" % search_sring
+    print(queryFilter)
     chatName = runSql("SELECT name FROM ChatNames WHERE chatId = %s" % (chatId))
+    print("1")
     sql = """SELECT Messages.messageId, Messages.content, UserNames.name
              FROM Messages, UserNames
-             WHERE Messages.userId = UserNames.userId AND Messages.chatId = %s""" % (chatId)
+             WHERE Messages.userId = UserNames.userId AND Messages.chatId = %s %s""" % (chatId, queryFilter)
+    print(sql)
     messages = runSql(sql)
-    # print(chatId)
     # print(messages)
     # print()
     # print()
@@ -121,7 +155,7 @@ def chatPage():
     # print('before')
     # print(messages_new[0]['messageId'])
     # print('after')
-    return render_template('chat.html', messages=messages_new, chatName=chatName)
+    return render_template('results.html', messages=messages_new, chatName=chatName)
 
 
 @app.route('/intro')
