@@ -96,11 +96,12 @@ def runSql(sql):
 @app.route('/')
 @login_required
 def main():
-    chats = runSql("SELECT ChatNames.chatId, ChatNames.name FROM ChatsToUsers, ChatNames WHERE ChatNames.chatId = ChatsToUsers.chatId and ChatsToUsers.userId = " + session['vkid'])
-    print(chats)
-    chats = [{"name": chat[1], "url": url_for('chatPage', chatId=chat[0])} for chat in chats]
-    print(chats)
-    return render_template('index.html', chats=chats)
+    if not 'vkid' in session:
+        return render_template('intro.html')
+    else:
+        chats = runSql("SELECT ChatNames.chatId, ChatNames.name FROM ChatsToUsers, ChatNames WHERE ChatNames.chatId = ChatsToUsers.chatId and ChatsToUsers.userId = " + session['vkid'])
+        chats = [{"name": chat[1], "url": url_for('chatPage', chatId=chat[0])} for chat in chats]
+        return render_template('index.html', chats=chats)
 
 
 @app.route('/chat')
