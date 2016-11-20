@@ -18,3 +18,7 @@ div
     width: 100px;
     
 }
+#imageUrl
+{
+	margin: 10px none none;
+}
