@@ -19,37 +19,20 @@
             </div>
         </div>
         <div id="content">
-            <div id="search">Поиск</div>
-            <div id="messages">
-                {% for message in messages %}
-                    <div class="message">
-                    <p>
-                        msg = {{ message["messageContent"] }}
-                    </p>
-                    <p>
-                        username = {{ message["userName"] }}
-                    </p>
-                        <div class="attachment">
-                            {% for photo in message["files"]["photo"] %}
-                                <p>image</p>
-                                <p class="attimg">
-                                    <p>name = {{ photo["name"] }}</p>
-                                    <a href="{{ photo["path"] }}">
-                                        <img src="{{ photo["path"] }}"/>
-                                    </a>
-                                </p>
-                            {% endfor %}
-                            {% for other_type_name in ["video", "audio", "link", "doc"] %}
-                                {% for other in message["files"][other_type_name] %}
-                                    <p class="atturl">
-                                        <p>type={{ other_type_name }}</p>
-                                        <a href="{{ other["path"] }}">{{ other["name"] }}</a>
-                                    </p>
-                                {% endfor %}
-                            {% endfor %}
+            <div id="search">
+                <div class="search">
+                    <form action="/chat" method="GET">
+                        <div class="actions">
+                            <input type=text name=search value="{{ request.form.search }}">
+                            <input type=hidden name="chatId" value="{{ request.args["chatId"] }}">
+                            <input type=submit value="search">
                         </div>
-                    </div>
-                {% endfor %}
+                    </form>
+                </div>
+            </div>
+            <div id="content">
+                {% block content %}
+                {% endblock %}
             </div>
         </div>
     </div>
