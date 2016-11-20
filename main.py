@@ -94,8 +94,11 @@ def login_required(f):
 
 
 def runSql(sql):
-    db = pymysql.connect(SERVER_ADDRESS, MYSQL_USER, MYSQL_PASS, MYSQL_DB, charset="utf8")
+    print(10)
+    db = pymysql.connect(SERVER_ADDRESS, MYSQL_USER, MYSQL_PASS, MYSQL_DB, charset="utf-8")
+    print(11)
     cursor = db.cursor()
+    print(12)
     try:
         cursor.execute(sql)
         rv = cursor.fetchall()
