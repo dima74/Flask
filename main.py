@@ -11,9 +11,10 @@ SECRET_KEY = '2834bLZVu3IIfPtDkwI5'
 # MYSQL_USER = "kipomur"
 # MYSQL_PASS = "praiseMUR"
 # MYSQL_DB = "miptvkbot"
-MYSQL_USER = "root"
-MYSQL_PASS = "7966915"
-MYSQL_DB = "test"
+MYSQL_USER = "kipomur"
+MYSQL_PASS = "praiseMUR"
+MYSQL_DB = "miptvkbot"
+SERVER_ADDRESS = "10.55.166.244"
 
 app = Flask("Simple app")
 template_dir = 'templates'
@@ -26,7 +27,7 @@ def send_js(path):
 
 @app.route('/iter_data_base')
 def fetchdb():
-    db = pymysql.connect("localhost", "amarokuser", "7966915", "amarokdb")
+    db = pymysql.connect(SERVER_ADDRESS, "amarokuser", "7966915", "amarokdb")
     cursor = db.cursor()
     sql = "SELECT * FROM genres"
     try:
@@ -57,7 +58,7 @@ def login_required(f):
 @app.route('/')
 @login_required
 def main():
-    db = pymysql.connect("localhost", MYSQL_USER, MYSQL_PASS, MYSQL_DB)
+    db = pymysql.connect(SERVER_ADDRESS, MYSQL_USER, MYSQL_PASS, MYSQL_DB)
     cursor = db.cursor()
     sql = "SELECT chatId FROM ChatsToUsers WHERE userId = " + session['vkid']
     try:
@@ -70,7 +71,7 @@ def main():
 
 
 def runSql(sql):
-    db = pymysql.connect("localhost", MYSQL_USER, MYSQL_PASS, MYSQL_DB)
+    db = pymysql.connect(SERVER_ADDRESS, MYSQL_USER, MYSQL_PASS, MYSQL_DB)
     cursor = db.cursor()
     try:
         cursor.execute(sql)
@@ -84,7 +85,7 @@ def runSql(sql):
 # @login_required
 def chatPage():
     chatId = request.args.get('chatId')
-    chatName = runSql("SELECT name FROM ChatNames WHERE chatId = %s" % (chatId))[0][0]
+    chatName = runSql("SELECT name FROM ChatNames WHERE chatId = %s" % (chatId))
     sql = """SELECT Messages.messageId, Messages.content, UserNames.name
              FROM Messages, UserNames, ChatNames
              WHERE Messages.chatId = ChatNames.chatId AND Messages.userId = UserNames.userId AND Messages.chatId = %s""" % (chatId)
@@ -96,8 +97,8 @@ def chatPage():
         files = runSql(sql2)
         files = [dict(zip(("type", "path", "name"), messageFile)) for messageFile in files]
         messages_new.append(dict(zip(("messageId", "messageContent", "userName", "files"), concat(message, files))))
-    # for message in messages_new:
-    #     print(message)
+    for message in messages_new:
+        print(message)
     return render_template('chat.html', messages=messages_new, chatName=chatName)
 
 
