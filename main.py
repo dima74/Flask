@@ -130,8 +130,11 @@ def chatPage():
     print("search_sring = ", search_string)
 
     messageContentFilter = "AND INSTR(Messages.content, '%s') > 0" % search_string if search_string else ""
+    print(0)
     chatFilter = "AND Messages.chatId = '%s'" % chatId if chatId else "AND Messages.chatId IN (SELECT chatId FROM ChatsToUsers WHERE userId = '%s')" % session['vkid']
+    print(1)
     chatName = runSql("SELECT name FROM ChatNames WHERE chatId = '%s'" % chatId)[0][0] if chatId else None
+    print(2)
     print("chatId = ", chatId)
     print("messageContentFilter = ", messageContentFilter)
     print("chatFilter = ", chatFilter)
@@ -144,6 +147,7 @@ def chatPage():
     # print()
     # print()
     tuple_append = lambda tup, elem: tuple(list(tup) + [elem])
+    print(3)
     messages_new = []
     for message in messages:
         # print(message)
