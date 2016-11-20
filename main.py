@@ -3,6 +3,7 @@ from flask import Flask, render_template, send_from_directory, request, abort, s
 from hashlib import md5
 from functools import wraps
 import pymysql
+import urllib
 
 APP_ID = '5737145'
 SECRET_KEY = '2834bLZVu3IIfPtDkwI5'
@@ -119,11 +120,18 @@ def chatPage():
     chatId = request.args.get('chatId', None)
     # if chatId is None:
     #     return redirect("/")
-    search_sring = request.args.get('search', "").decode("utf-8")
-    messageContentFilter = "AND INSTR(Messages.content, '%s') > 0" % search_sring if search_sring else ""
+
+    # search_sring = request.args.get('search', "")
+    # search_sring = request.args.get('search', "").decode("utf-8")
+    # search_sring = urllib.unquote(unicode(request.args.get('search', "")))
+    search_string = request.args.get('search', "")
+    print("search_sring = ", search_string)
+    search_string = search_string.encode("utf-8")
+    print("search_sring = ", search_string)
+
+    messageContentFilter = "AND INSTR(Messages.content, '%s') > 0" % search_string if search_string else ""
     chatFilter = "AND Messages.chatId = '%s'" % chatId if chatId else "AND Messages.chatId IN (SELECT chatId FROM ChatsToUsers WHERE userId = '%s')" % session['vkid']
     chatName = runSql("SELECT name FROM ChatNames WHERE chatId = '%s'" % chatId)[0][0] if chatId else None
-    print("search_sring = ", search_sring)
     print("chatId = ", chatId)
     print("messageContentFilter = ", messageContentFilter)
     print("chatFilter = ", chatFilter)
