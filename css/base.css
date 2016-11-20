@@ -71,3 +71,8 @@ ul.navbar-nav
 {
     margin-right: 10px;
 }
+
+img.img-vkbot
+{
+    max-width: 200px;
+}
