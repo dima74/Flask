@@ -19,12 +19,6 @@ app = Flask("Simple app")
 template_dir = 'templates'
 
 
-# @app.route('/chat')
-# def chat_render():
-#     messages = [("msg1", [("t1", "n1", "http://ya.ru")] * 2), ("msg2", [("t2", "n2", "http://google.com")] * 3)]
-#     return render_template("chat.html", messages=messages)
-
-
 @app.route('/css/<path:path>')
 def send_js(path):
     return send_from_directory('css', path)
@@ -90,7 +84,8 @@ def runSql(sql):
 # @login_required
 def chatPage():
     chatId = request.args.get('chatId')
-    sql = """SELECT Messages.messageId, Messages.content, UserNames.name, ChatNames.name
+    chatName = runSql("SELECT name FROM ChatNames WHERE chatId = %s" % (chatId))
+    sql = """SELECT Messages.messageId, Messages.content, UserNames.name
              FROM Messages, UserNames, ChatNames
              WHERE Messages.chatId = ChatNames.chatId AND Messages.userId = UserNames.userId AND Messages.chatId = %s""" % (chatId)
     messages = runSql(sql)
@@ -100,10 +95,10 @@ def chatPage():
         sql2 = "SELECT type, path, name FROM FileLinks WHERE messageId = %d" % (message[0])
         files = runSql(sql2)
         files = [dict(zip(("type", "path", "name"), messageFile)) for messageFile in files]
-        messages_new.append(dict(zip(("messageId", "messageContent", "userName", "chatName", "files"), concat(message, files))))
-    for message in messages_new:
-        print(message)
-    return render_template('chat.html', messages=messages_new)
+        messages_new.append(dict(zip(("messageId", "messageContent", "userName", "files"), concat(message, files))))
+    # for message in messages_new:
+    #     print(message)
+    return render_template('test.html', messages=messages_new, chatName=chatName)
 
 
 @app.route('/intro')
