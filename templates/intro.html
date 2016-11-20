@@ -1,13 +1,26 @@
 {% extends "index.html" %}
 
 {% block intro_title %}
-<h1>Здесь вы найдете полезную информацию из ваших диалогов</h1>
+<h1>Здесь вы найдете полезную информацию</h1>
+<h1>из всех ваших диалогов</h1>
 {% endblock %}
 
 {% block intro_content %}
 {% if session.get('vkid', None) is none %}
-<p><a href="/auth">Авторизация</a></p>
-Не авторизованы
+<!--<p><a href="/auth">Авторизация</a></p>-->
+<div style="font-size: 15pt">
+    <div align="center">
+        <p>Приветствуем вас на нашем сайте!<br>
+            <a onclick="vkoauth()">Авторизуйтесь</a> через вконтакте и вы сможете просмотреть все вложения в ваших беседах.<br>
+            Также у нас есть полноценный поиск по вложениям!<br></p>
+    </div>
+    <h3>Простая инструкция:</h3>
+    <ul>
+        <li>Добавьте в друзья нашего <a href="https://vk.com/kipomur">vk-бота</a></li>
+        <li>Пригласи его в беседу и все вложения в ней будут отображаться на нашем сайте!</li>
+    </ul>
+</div>
+
 {% else %}
 <div>
     <div id="search">
@@ -30,7 +43,6 @@
 </div>
 <h4>&nbsp</h4>
 <div class="list-group">
-    Авторизованы
     {% for row in chats %}
     {#
     <div class="panel panel-default">#}
