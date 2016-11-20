@@ -100,7 +100,7 @@ def main():
     else:
         chats = runSql("SELECT ChatNames.chatId, ChatNames.name FROM ChatsToUsers, ChatNames WHERE ChatNames.chatId = ChatsToUsers.chatId and ChatsToUsers.userId = " + session['vkid'])
         chats = [{"name": chat[1], "url": url_for('chatPage', chatId=chat[0])} for chat in chats]
-        return render_template('index.html', chats=chats)
+        return render_template('intro.html', chats=chats)
 
 
 @app.route('/chat')
@@ -180,9 +180,13 @@ def oauth_success():
     session['vkid'] = request.args.get('uid')
     session['vkhash'] = request.args.get('sig')
     session['vkhashpart'] = request.args.get('hashpart')
-    print(request.args.get('first'))
-    print(session)
     return redirect(session.get('next', "/"))
+
+
+@app.route('/logout')
+def logout():
+    session.clear()
+    return redirect('/')
 
 
 @app.route('/oauth')
