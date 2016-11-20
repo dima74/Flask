@@ -18,6 +18,7 @@ SERVER_ADDRESS = "10.55.166.244"
 app = Flask("Simple app", static_folder="/var/www/html")
 template_dir = 'templates'
 
+
 # @app.route('/home/ulyanin/')
 # def send_fonts(path):
 #     return send_from_directory('fonts', path)
@@ -149,7 +150,8 @@ def chatPage():
         attachments = [[] for _ in range(5)]
         for messageFile in files:
             d = dict(zip(("type", "path", "name"), messageFile))
-            d["path"] = d["path"][13:]
+            if d["type"] != 5:
+                d["path"] = d["path"][13:]
             attachments[messageFile[0] - 1].append(d)
         # print()
         # print('attachments = ', attachments)
