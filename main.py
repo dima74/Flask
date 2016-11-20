@@ -95,37 +95,37 @@ def chatPage():
              FROM Messages, UserNames
              WHERE Messages.userId = UserNames.userId AND Messages.chatId = %s""" % (chatId)
     messages = runSql(sql)
-    print(chatId)
-    print(messages)
-    print()
-    print()
+    # print(chatId)
+    # print(messages)
+    # print()
+    # print()
     tuple_append = lambda tup, elem: tuple(list(tup) + [elem])
     messages_new = []
     for message in messages:
-        print(message)
+        # print(message)
         sql2 = "SELECT type, path, name FROM FileLinks WHERE messageId = %d" % (message[0])
         files = runSql(sql2)
         if not files:
             continue
-        print(files)
+        # print(files)
         # nameType = dict(zip(range(1, 6), ["photo", "video", "audio", "doc", "link"]))
         # attachments = dict(zip(["photo", "video", "audio", "doc", "link"], [[] for i in range(6)]))
         # nameType = dict(zip(range(1, 6), ["photo", "video", "audio", "doc", "link"]))
         attachments = [[] for _ in range(5)]
         for messageFile in files:
             attachments[messageFile[0] - 1].append(dict(zip(("type", "path", "name"), messageFile)))
-        print()
-        print('attachments = ', attachments)
-        print('dict = ', dict(zip(("photo", "video", "audio", "doc", "link"), attachments)))
-        print()
+        # print()
+        # print('attachments = ', attachments)
+        # print('dict = ', dict(zip(("photo", "video", "audio", "doc", "link"), attachments)))
+        # print()
         messages_new.append(dict(zip(("messageId", "messageContent", "userName", "files"),
                                      tuple_append(message, dict(zip(("photo", "video", "audio", "doc", "link"), attachments))))))
-        print('concat = ', tuple_append(message, dict(zip(("photo", "video", "audio", "doc", "link"), attachments))))
-        print('dict = ', dict(zip(("messageId", "messageContent", "userName", "files"),
-                                  tuple_append(message, dict(zip(("photo", "video", "audio", "doc", "link"), attachments))))))
-    print()
-    for message in messages_new:
-        print(message)
+        # print('concat = ', tuple_append(message, dict(zip(("photo", "video", "audio", "doc", "link"), attachments))))
+        # print('dict = ', dict(zip(("messageId", "messageContent", "userName", "files"),
+        #                           tuple_append(message, dict(zip(("photo", "video", "audio", "doc", "link"), attachments))))))
+    # print()
+    # for message in messages_new:
+    #     print(message)
     # print('before')
     # print(messages_new[0]['messageId'])
     # print('after')
