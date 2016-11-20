@@ -36,6 +36,7 @@ div.navbar-header
 body, html {
     margin: 0px;
     background-color: #e5f9eb;
+    /*background-color: LightCyan;*/
 }
 
 #all, #main {
@@ -58,4 +59,15 @@ article
     border: none;
     min-height: 100%;
     padding-bottom: 100px;
+    background-color: inherit;
+}
+
+a.list-group-item .list-group-item-heading
+{
+    color: #2b669a;
+}
+
+ul.navbar-nav
+{
+    margin-right: 10px;
 }

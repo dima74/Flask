@@ -18,6 +18,10 @@ SERVER_ADDRESS = "10.55.166.244"
 app = Flask("Simple app")
 template_dir = 'templates'
 
+# @app.route('/home/ulyanin/')
+# def send_fonts(path):
+#     return send_from_directory('fonts', path)
+
 
 def getDataBase():
     return pymysql.connect(SERVER_ADDRESS, MYSQL_USER, MYSQL_PASS, MYSQL_DB, charset="utf8")
@@ -60,6 +64,11 @@ def send_js(path):
 @app.route('/img/<path:path>')
 def send_img(path):
     return send_from_directory('img', path)
+
+
+@app.route('/files/<path:path>')
+def send_files(path):
+    return send_from_directory('files', path)
 
 
 def login_required(f):
@@ -139,7 +148,9 @@ def chatPage():
         # nameType = dict(zip(range(1, 6), ["photo", "video", "audio", "doc", "link"]))
         attachments = [[] for _ in range(5)]
         for messageFile in files:
-            attachments[messageFile[0] - 1].append(dict(zip(("type", "path", "name"), messageFile)))
+            d = dict(zip(("type", "path", "name"), messageFile))
+            d["path"] = d["path"][13:]
+            attachments[messageFile[0] - 1].append(d)
         # print()
         # print('attachments = ', attachments)
         # print('dict = ', dict(zip(("photo", "video", "audio", "doc", "link"), attachments)))
