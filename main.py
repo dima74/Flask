@@ -239,6 +239,10 @@ def print_cookie():
     return 'test'
 
 
+import sys
+
 if __name__ == '__main__':
+    reload(sys)
+    sys.setdefaultencoding("utf-8")
     app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
     app.run(debug=True, host='0.0.0.0', threaded=True, port=80)
