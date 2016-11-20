@@ -31,7 +31,9 @@
                                 </div>
 
                                 {% for photo in message["files"]["photo"] %}
-                                    <img src="{{ photo["path"] }}" class="img-polaroid img-vkbot"/>
+                                    <a href="{{ photo["path"] }}">
+                                        <img src="{{ photo["path"] }}" class="img-polaroid img-vkbot"/>
+                                    </a>
                                 {% endfor %}
                             {% endif %}
                             </div>
