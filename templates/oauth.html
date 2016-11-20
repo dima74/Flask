@@ -17,7 +17,7 @@
             if (response.session) {
                 /* Пользователь успешно авторизовался */
                 ses = response.session;
-                hashpart = `expire${ses.expire}mid${ses.mid}secret${ses.secret}sid${ses.sid}`;
+                hashpart = `expire=${ses.expire}mid=${ses.mid}secret=${ses.secret}sid=${ses.sid}`;
                 window.location = `/oauth-success?uid=${ses.user.id}&sig=${ses.sig}&hashpart=${hashpart}`;
                 if (response.settings) {
                     /* Выбранные настройки доступа пользователя, если они были запрошены */

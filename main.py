@@ -73,31 +73,13 @@ def login_required(f):
         #     session.clear()
         #     session['next'] = request.url
         #     return redirect('/intro')
-        print('hashpart' not in session)
-        print(session.get('vkhash', None))
-        print(md5((session['hashpart'] + SECRET_KEY).encode('utf-8')))
-        if 'hashpart' not in session or session.get('vkhash', None) != md5((session['hashpart'] + SECRET_KEY).encode('utf-8')).hexdigest():
+        if 'vkhashpart' not in session or session.get('vkhash', None) != md5((session['vkhashpart'] + SECRET_KEY).encode('utf-8')).hexdigest():
             session.clear()
             session['next'] = request.url
             return redirect('/oauth')
         return f(*args, **kwargs)
 
     return decorated_function
-
-
-@app.route('/')
-@login_required
-def main():
-    db = pymysql.connect(SERVER_ADDRESS, MYSQL_USER, MYSQL_PASS, MYSQL_DB, charset="utf8")
-    cursor = db.cursor()
-    sql = "SELECT chatId FROM ChatsToUsers WHERE userId = " + session['vkid']
-    try:
-        cursor.execute(sql)
-        chatIds = cursor.fetchall()
-        return render_template('index.html', rv=chatIds)
-    except:
-        abort(501)
-        # return render_template('index.html', vkhash=session.get('vkid', None))
 
 
 def runSql(sql):
@@ -109,6 +91,16 @@ def runSql(sql):
         return rv
     except:
         abort(501)
+
+
+@app.route('/')
+@login_required
+def main():
+    chats = runSql("SELECT ChatNames.chatId, ChatNames.name FROM ChatsToUsers, ChatNames WHERE ChatNames.chatId = ChatsToUsers.chatId and ChatsToUsers.userId = " + session['vkid'])
+    print(chats)
+    chats = [{"name": chat[1], "url": url_for('chatPage', chatId=chat[0])} for chat in chats]
+    print(chats)
+    return render_template('index.html', chats=chats)
 
 
 @app.route('/chat')
