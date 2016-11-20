@@ -183,6 +183,8 @@ def chatPage():
     # print(messages_new[0]['messageId'])
     # print('after')
     print('end')
+    print(message)
+    print(chatName)
     return render_template('results.html', messages=messages_new, chatName=chatName)
 
 
