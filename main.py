@@ -138,7 +138,7 @@ def chatPage():
     search_string = request.args.get('search', "")
     # print("search_sring = ", search_string)
     print(type(search_string))
-    search_string = search_string.encode("ascii")
+    search_string = search_string.encode("utf8")
     print("search_sring = ", search_string)
 
     messageContentFilter = "AND INSTR(Messages.content, '%s') > 0" % search_string if search_string else ""
