@@ -119,7 +119,7 @@ def chatPage():
     chatId = request.args.get('chatId', None)
     # if chatId is None:
     #     return redirect("/")
-    search_sring = request.args.get('search', "")
+    search_sring = request.args.get('search', "").decode("utf-8")
     messageContentFilter = "AND INSTR(Messages.content, '%s') > 0" % search_sring if search_sring else ""
     chatFilter = "AND Messages.chatId = '%s'" % chatId if chatId else "AND Messages.chatId IN (SELECT chatId FROM ChatsToUsers WHERE userId = '%s')" % session['vkid']
     chatName = runSql("SELECT name FROM ChatNames WHERE chatId = '%s'" % chatId)[0][0] if chatId else None
