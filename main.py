@@ -94,7 +94,6 @@ def runSql(sql):
 
 
 @app.route('/')
-@login_required
 def main():
     if not 'vkid' in session:
         return render_template('intro.html')
