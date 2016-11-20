@@ -3,7 +3,6 @@ from flask import Flask, render_template, send_from_directory, request, abort, s
 from hashlib import md5
 from functools import wraps
 import pymysql
-import urllib
 
 APP_ID = '5737145'
 SECRET_KEY = '2834bLZVu3IIfPtDkwI5'
@@ -11,40 +10,21 @@ MYSQL_USER = "kipomur"
 MYSQL_PASS = "praiseMUR"
 MYSQL_DB = "miptvkbot"
 SERVER_ADDRESS = "10.55.166.244"
-# SERVER_ADDRESS = "localhost"
-# MYSQL_USER = "root"
-# MYSQL_PASS = "7966915"
-# MYSQL_DB = "test"
-
 app = Flask("Simple app", static_folder="/var/www/html")
 template_dir = 'templates'
 
 
-# @app.route('/home/ulyanin/')
-# def send_fonts(path):
-#     return send_from_directory('fonts', path)
-
-
 def getDataBase():
-    # return pymysql.connect(SERVER_ADDRESS, MYSQL_USER, MYSQL_PASS, MYSQL_DB, charset="utf8")
     return pymysql.connect(SERVER_ADDRESS, MYSQL_USER, MYSQL_PASS, MYSQL_DB, use_unicode=True, charset="utf8")
 
 
 @app.route('/chat/search', methods=['GET', 'POST'])
 def search():
-    print("render_search")
     if request.method == "GET":
-        print("get")
         db = getDataBase()
-        print("1")
         c = db.cursor()
-        print("2")
-        print(request.form)
-        print('''select * from Messages where userId = %s''' % request.args['search'])
         c.execute('''select * from Messages where userId = %s''' % request.args['search'])
-        print("3")
         records = c.fetchall()
-        print("rec = ", records)
         return render_template("results.html", records=records)
     return render_template('chat.html')
 
@@ -95,20 +75,13 @@ def login_required(f):
 
 
 def runSql(sql):
-    print(10)
     db = getDataBase()
-    print(11)
     cursor = db.cursor()
-    print(12)
     try:
         cursor.execute("SET NAMES utf8;")  # or utf8 or any other charset you want to handle
-        print(13)
         cursor.execute("SET CHARACTER SET utf8;")  # same as above
-        print(14)
         cursor.execute("SET character_set_connection=utf8;")  # same as above
-        print(15)
         cursor.execute(sql)
-        print(16)
         rv = cursor.fetchall()
         return rv
     except:
@@ -129,74 +102,29 @@ def main():
 @login_required
 def chatPage():
     chatId = request.args.get('chatId', None)
-    # if chatId is None:
-    #     return redirect("/")
-
-    # search_sring = request.args.get('search', "")
-    # search_sring = request.args.get('search', "").decode("utf-8")
-    # search_sring = urllib.unquote(unicode(request.args.get('search', "")))
     search_string = request.args.get('search', "")
-    # print("search_sring = ", search_string)
-    # print(type(search_string))
-    # search_string = search_string.encode("utf8")
-    # print("search_sring = ", search_string)
-
     messageContentFilter = "AND INSTR(Messages.content, '%s') > 0" % search_string if search_string else ""
-    print(0)
     chatFilter = "AND Messages.chatId = '%s'" % chatId if chatId else "AND Messages.chatId IN (SELECT chatId FROM ChatsToUsers WHERE userId = '%s')" % session['vkid']
-    print(1)
     chatName = runSql("SELECT name FROM ChatNames WHERE chatId = '%s'" % chatId)[0][0] if chatId else None
-    print(2)
-    print("chatId = ", chatId)
-    print("messageContentFilter = ", messageContentFilter)
-    print("chatFilter = ", chatFilter)
     sql = """SELECT Messages.messageId, Messages.content, UserNames.name
              FROM Messages, UserNames
              WHERE Messages.userId = UserNames.userId %s %s""" % (chatFilter, messageContentFilter)
-    print(sql)
     messages = runSql(sql)
-    print(messages)
-    print()
-    print()
     tuple_append = lambda tup, elem: tuple(list(tup) + [elem])
-    print(3)
     messages_new = []
-    print(4)
     for message in messages:
-        print(5)
-        # print(message)
         sql2 = "SELECT type, path, name FROM FileLinks WHERE messageId = %d" % (message[0])
         files = runSql(sql2)
         if not files:
             continue
-        # print(files)
-        # nameType = dict(zip(range(1, 6), ["photo", "video", "audio", "doc", "link"]))
-        # attachments = dict(zip(["photo", "video", "audio", "doc", "link"], [[] for i in range(6)]))
-        # nameType = dict(zip(range(1, 6), ["photo", "video", "audio", "doc", "link"]))
         attachments = [[] for _ in range(5)]
         for messageFile in files:
             d = dict(zip(("type", "path", "name"), messageFile))
             if d["type"] != 5 and d["type"] != 2:
                 d["path"] = d["path"][13:]
             attachments[messageFile[0] - 1].append(d)
-        # print()
-        # print('attachments = ', attachments)
-        # print('dict = ', dict(zip(("photo", "video", "audio", "doc", "link"), attachments)))
-        # print()
         messages_new.append(dict(zip(("messageId", "messageContent", "userName", "files"),
                                      tuple_append(message, dict(zip(("photo", "video", "audio", "doc", "link"), attachments))))))
-        # print('concat = ', tuple_append(message, dict(zip(("photo", "video", "audio", "doc", "link"), attachments))))
-        # print('dict = ', dict(zip(("messageId", "messageContent", "userName", "files"),
-        #                           tuple_append(message, dict(zip(("photo", "video", "audio", "doc", "link"), attachments))))))
-    # print()
-    # for message in messages_new:
-    #     print(message)
-    # print('before')
-    # print(messages_new[0]['messageId'])
-    # print('after')
-    print('end')
-    # print(message)
-    # print(chatName)
     return render_template('results.html', messages=messages_new, chatName=chatName)
 
 
