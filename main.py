@@ -106,7 +106,9 @@ def main():
 @app.route('/chat')
 @login_required
 def chatPage():
-    chatId = request.args.get('chatId')
+    chatId = request.args.get('chatId', None)
+    if chatId is None:
+        return redirect("/")
     print("chatId =", chatId)
     search_sring = request.args.get('search', None)
     print(search_sring)

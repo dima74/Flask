@@ -4,15 +4,39 @@
         <p><a href="/auth">Авторизация</a></p>
         Не авторизованы
     {% else %}
+        <div>
+
+            <div id="search">
+                <form action="/chat" method="GET">
+                    <div class="actions">
+                        <ul class="nav navbar-nav">
+                            <li>
+                                <input id="sbox" class="form-control" placeholder="Попытайтесь найти" type=text
+                                       name=search value="{{ request.form.search }}">
+                                <input type=hidden name="chatId" value="{{ request.args["chatId"] }}">
+                            </li>
+                        </ul>
+                        <input type=submit value="search" class="btn btn-primary">
+                        {#                            <button type="submit" class="btn btn-primary">Поиск по всем диалогам</button>#}
+                    </div>
+                </form>
+            </div>
+        </div>
+        <h4>&nbsp</h4>
         <div class="list-group">
             Авторизованы
             {% for row in chats %}
-                <div class="chat">
-                    <a href="{{ row["url"] }}" class="list-group-item">
-                        <h4 class="list-group-item-heading">
-                            {{ row["name"] }}
-                        </h4>
-                    </a>
+                <div class="panel panel-default">
+                    <div class="panel-body">
+        
+                    <div class="chat">
+                        <a href="{{ row["url"] }}" class="list-group-item">
+                            <h4 class="list-group-item-heading">
+                                {{ row["name"] }}
+                            </h4>
+                        </a>
+                 </div>
+                </div>
                 </div>
             {% endfor %}
         </div>
