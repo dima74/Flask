@@ -57,21 +57,6 @@ def login_required(f):
     return decorated_function
 
 
-@app.route('/')
-@login_required
-def main():
-    db = pymysql.connect(SERVER_ADDRESS, MYSQL_USER, MYSQL_PASS, MYSQL_DB, charset="utf8")
-    cursor = db.cursor()
-    sql = "SELECT chatId FROM ChatsToUsers WHERE userId = " + session['vkid']
-    try:
-        cursor.execute(sql)
-        chatIds = cursor.fetchall()
-        return render_template('index.html', rv=chatIds)
-    except:
-        abort(501)
-        # return render_template('index.html', vkhash=session.get('vkid', None))
-
-
 def runSql(sql):
     db = pymysql.connect(SERVER_ADDRESS, MYSQL_USER, MYSQL_PASS, MYSQL_DB, charset="utf8")
     cursor = db.cursor()
@@ -81,6 +66,16 @@ def runSql(sql):
         return rv
     except:
         abort(501)
+
+
+@app.route('/')
+@login_required
+def main():
+    chats = runSql("SELECT ChatNames.chatId, ChatNames.name FROM ChatsToUsers, ChatNames WHERE ChatNames.chatId = ChatsToUsers.chatId and ChatsToUsers.userId = " + session['vkid'])
+    print(chats)
+    chats = [{"name": chat[1], "url": url_for('chatPage', chatId=chat[0])} for chat in chats]
+    print(chats)
+    return render_template('index.html', chats=chats)
 
 
 @app.route('/chat')
