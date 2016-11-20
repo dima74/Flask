@@ -125,7 +125,7 @@ def chatPage():
     # search_sring = request.args.get('search', "").decode("utf-8")
     # search_sring = urllib.unquote(unicode(request.args.get('search', "")))
     search_string = request.args.get('search', "")
-    print("search_sring = ", search_string)
+    # print("search_sring = ", search_string)
     search_string = search_string.encode("utf-8")
     print("search_sring = ", search_string)
 
