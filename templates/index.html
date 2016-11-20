@@ -68,7 +68,7 @@
                     {% if not 'vkid' in session %}
                     <button class="btn btn-primary wauth_auth _wauth_auth" onclick="vkoauth()">Войти через ВКонтакте</button>
                     {% else %}
-                    <p>{{ session['vkfirst'] }} {{ session['vklast'] }}</p>
+                    {{ session['vkfirst'] }} {{ session['vklast'] }}
                     <button class="btn btn-primary wauth_auth _wauth_auth" onclick="vklogout()">Выйти</button>
                     {% endif %}
                 </div>
