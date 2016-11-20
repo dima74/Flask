@@ -12,17 +12,17 @@ SECRET_KEY = '2834bLZVu3IIfPtDkwI5'
 # MYSQL_PASS = "praiseMUR"
 # MYSQL_DB = "miptvkbot"
 MYSQL_USER = "root"
-MYSQL_PASS = ""
+MYSQL_PASS = "7966915"
 MYSQL_DB = "test"
 
 app = Flask("Simple app")
 template_dir = 'templates'
 
 
-@app.route('/chat')
-def chat_render():
-    messages = [("msg1", [("t1", "n1", "http://ya.ru")] * 2), ("msg2", [("t2", "n2", "http://google.com")] * 3)]
-    return render_template("chat.html", messages=messages)
+# @app.route('/chat')
+# def chat_render():
+#     messages = [("msg1", [("t1", "n1", "http://ya.ru")] * 2), ("msg2", [("t2", "n2", "http://google.com")] * 3)]
+#     return render_template("chat.html", messages=messages)
 
 
 @app.route('/css/<path:path>')
@@ -101,9 +101,9 @@ def chatPage():
         files = runSql(sql2)
         files = [dict(zip(("type", "path", "name"), messageFile)) for messageFile in files]
         messages_new.append(dict(zip(("messageId", "messageContent", "userName", "chatName", "files"), concat(message, files))))
-    # for message in messages_new:
-    #     print(message)
-    return render_template('test.html', messages=messages_new)
+    for message in messages_new:
+        print(message)
+    return render_template('chat.html', messages=messages_new)
 
 
 @app.route('/intro')
