@@ -101,11 +101,11 @@ def runSql(sql):
     cursor = db.cursor()
     print(12)
     try:
-        cursor.execute("SET NAMES utf8mb4;")  # or utf8 or any other charset you want to handle
+        cursor.execute("SET NAMES utf8;")  # or utf8 or any other charset you want to handle
         print(13)
-        cursor.execute("SET CHARACTER SET utf8mb4;")  # same as above
+        cursor.execute("SET CHARACTER SET utf8;")  # same as above
         print(14)
-        cursor.execute("SET character_set_connection=utf8mb4;")  # same as above
+        cursor.execute("SET character_set_connection=utf8;")  # same as above
         print(15)
         cursor.execute(sql)
         print(16)
