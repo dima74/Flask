@@ -60,27 +60,15 @@
                             });
                         }
 
-                        function deleteAllCookies() {
-                            var cookies = document.cookie.split(";");
-                            for (var i = 0; i < cookies.length; i++) {
-                                var cookie = cookies[i];
-                                var eqPos = cookie.indexOf("=");
-                                var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
-                                document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
-                            }
-                        }
-
                         function vklogout() {
-                            alert(1);
                             VK.Auth.logout(null);
-                            deleteAllCookies();
-                            window.location = '/';
+                            window.location = '/logout';
                         }
                     </script>
                     {% if not 'vkid' in session %}
                     <button class="btn btn-primary wauth_auth _wauth_auth" onclick="vkoauth()">Войти через ВКонтакте</button>
                     {% else %}
-                    <p>{{ session['vkfirst'] }} {{ session['vklast'] }}</p>
+                    {{ session['vkfirst'] }} {{ session['vklast'] }}
                     <button class="btn btn-primary wauth_auth _wauth_auth" onclick="vklogout()">Выйти</button>
                     {% endif %}
                 </div>

@@ -2,13 +2,13 @@
 {% block content %}
     results
     <div id="messages">
-{#    {% if messages %}#}
+        {#    {% if messages %}#}
         {% for message in messages %}
             <div class="message">
                 <div class="panel panel-default">
                     <div class="panel-body">
-          
 
+<<<<<<< HEAD
                  <blockquote>
                  <p>   msg = {{ message["messageContent"] }}
                  </p>
@@ -26,28 +26,58 @@
                         {% for photo in message["files"]["photo"] %}
                             <img src="{{ photo["path"] }}"  class="img-polaroid" />
                         {% endfor %}
+=======
+                        <p>
+                            msg = {{ message["messageContent"] }}
+                        </p>
+                        <p>
+                            <BLOCKQUOTE>
+                                username = {{ message["userName"] }}
+                            </BLOCKQUOTE>
+                        </p>
+>>>>>>> 93088734295fe9f9b75f5c7cd600830a50f3e585
                     </div>
-                    <div>
-                         <h4> Links </h4>
-               <ul >
-                                      {% for other_type_name in ["video", "audio", "link", "doc"] %}
-                            {% for other in message["files"][other_type_name] %}
-                               <li> <div class="atturl">
-{#                                                  <a href="#"><span class="glyphicon glyphicon-link" aria-hidden="true">  
-                                                    <p>type={{ other_type_name }}</p>#}
-                                                         <a href="{{ other["path"] }}">{{ other["name"] }}</a>
-                                                         </span> </a>
-                                </div> </li>
-                            {% endfor %}
-                        {% endfor %}
-                        </ul>
 
+                    <div class="panel-footer">
+                        <div class="attachment">
+                            <div>
+                            {% if message["files"]["photo"] %}
+                                <div>
+                                    <h4><span class="glyphicon glyphicon-picture" aria-hidden="true"> Pictures</span>
+                                    </h4>
+                                </div>
+
+                                {% for photo in message["files"]["photo"] %}
+                                    <img src="{{ photo["path"] }}" class="img-polaroid"/>
+                                {% endfor %}
+                            {% endif %}
+                            </div>
+                            <div>
+                            {% if message["files"]["video"] or message["files"]["audio"] or
+                             message["files"]["link"] or message["files"]["doc"] %}
+                                <h4> Links </h4>
+                                <ul class="link-item">
+                                    {% for other_type_name in ["video", "audio", "link", "doc"] %}
+                                        {% for other in message["files"][other_type_name] %}
+                                            <li>
+                                                <div class="atturl">
+                                                    <a href="#">
+{#                                                    <p>type={{ other_type_name }}</p>#}
+                                                        <a href="{{ other["path"] }}">{{ other["name"] }}
+                                                        </a>
+                                                    </a>
+                                                </div>
+                                            </li>
+                                        {% endfor %}
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                            </div>
+                        </div>
                     </div>
-                    </div>
-                </div>
                 </div>
             </div>
         {% endfor %}
-{#    {% endif %}#}
+        {#    {% endif %}#}
     </div>
 {% endblock %}
