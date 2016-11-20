@@ -67,7 +67,7 @@ def login_required(f):
     def decorated_function(*args, **kwargs):
         if not 'vkid' in session:
             session['next'] = request.url
-            return redirect(url_for('intro'))
+            return redirect(url_for('main'))
 
         # if session.get('vkhash', None) != md5((APP_ID + session['vkid'] + SECRET_KEY).encode('utf-8')).hexdigest():
         #     session.clear()
@@ -76,7 +76,7 @@ def login_required(f):
         if 'vkhashpart' not in session or session.get('vkhash', None) != md5((session['vkhashpart'] + SECRET_KEY).encode('utf-8')).hexdigest():
             session.clear()
             session['next'] = request.url
-            return redirect(url_for('intro'))
+            return redirect(url_for('main'))
         return f(*args, **kwargs)
 
     return decorated_function
@@ -94,7 +94,6 @@ def runSql(sql):
 
 
 @app.route('/')
-@login_required
 def main():
     if not 'vkid' in session:
         return render_template('intro.html')
@@ -176,23 +175,28 @@ def intro():
 @app.route('/oauth-success')
 def oauth_success():
     session['vkid'] = request.args.get('uid')
+    session['vkfirst'] = request.args.get('first')
+    session['vklast'] = request.args.get('last')
+    session['vkid'] = request.args.get('uid')
     session['vkhash'] = request.args.get('sig')
     session['vkhashpart'] = request.args.get('hashpart')
+    print(request.args.get('first'))
+    print(session)
     return redirect(session.get('next', "/"))
 
 
-# @app.route('/oauth')
-# def auth():
-#     return render_template('oauth.html')
+@app.route('/oauth')
+def auth():
+    return render_template('oauth.html')
 
 
-# @app.route('/print_cookie')
-# def print_cookie():
-#     print(session)
-#     print(request.cookies)
-#     return 'test'
+@app.route('/print_cookie')
+def print_cookie():
+    print(session)
+    print(request.cookies)
+    return 'test'
 
 
 if __name__ == '__main__':
     app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
-    app.run(debug=True, host='0.0.0.0')
+    app.run(debug=True, host='0.0.0.0', port=80)

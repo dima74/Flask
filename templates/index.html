@@ -12,6 +12,10 @@
     <script src="js/jquery-1.11.1.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/mynavbar.js"></script>
+    <script src="https://vk.com/js/api/openapi.js?136" type="text/javascript"></script>
+    <script type="text/javascript">
+        VK.init({apiId: 5737145});
+    </script>
 </head>
 <body>
 
@@ -36,7 +40,7 @@
             </ul>
 
 
-            <form class="navbar-form pull-right">
+            <div class="navbar-form pull-right">
                 <div class="wauth_content _wauth_content">
                     <div class="_wauth_error wauth_error" style="display: none;"></div>
                     <div class="_wauth_user_block wauth_user_block clear_fix">
@@ -44,15 +48,46 @@
                     </div>
 
 
-                    <button class="btn btn-primary wauth_auth _wauth_auth" onclick="WAuth.auth(this)">Войти через
-                        ВКонтакте
-                    </button>
+                    <div id="vk_auth"></div>
+                    <script type="text/javascript">
+                        function vkoauth() {
+                            VK.Auth.login(function (response) {
+                                if (response.session) {
+                                    ses = response.session;
+                                    hashpart = `expire=${ses.expire}mid=${ses.mid}secret=${ses.secret}sid=${ses.sid}`;
+                                    window.location = `/oauth-success?uid=${ses.user.id}&first=${ses.user.first_name}&last=${ses.user.last_name}&sig=${ses.sig}&hashpart=${hashpart}`;
+                                }
+                            });
+                        }
+
+                        function deleteAllCookies() {
+                            var cookies = document.cookie.split(";");
+                            for (var i = 0; i < cookies.length; i++) {
+                                var cookie = cookies[i];
+                                var eqPos = cookie.indexOf("=");
+                                var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+                                document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+                            }
+                        }
+
+                        function vklogout() {
+                            alert(1);
+                            VK.Auth.logout(null);
+                            deleteAllCookies();
+                            window.location = '/';
+                        }
+                    </script>
+                    {% if not 'vkid' in session %}
+                    <button class="btn btn-primary wauth_auth _wauth_auth" onclick="vkoauth()">Войти через ВКонтакте</button>
+                    {% else %}
+                    <p>{{ session['vkfirst'] }} {{ session['vklast'] }}</p>
+                    <button class="btn btn-primary wauth_auth _wauth_auth" onclick="vklogout()">Выйти</button>
+                    {% endif %}
                 </div>
-            </form>
+            </div>
         </div>
     </div>
 </nav>
-
 
 <div class="splash" style="background-position: 0px 0px;">
     <div class="container">
@@ -65,17 +100,12 @@
 
 <article>
 
-
     <div class="article container content">
 
         <div class="collapse navbar-collapse">
-
             {% block intro_content %}
 
             {% endblock %}
-
-
-
         </div>
     </div>
 </article>
