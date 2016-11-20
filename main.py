@@ -137,7 +137,7 @@ def auth_success():
     return redirect(session.get('next', "/"))
 
 
-@app.route('/auth')
+@app.route('/oauth')
 def auth():
     return render_template('oauth.html')
 
