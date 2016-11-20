@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Oauth</title>
+    <script src="https://vk.com/js/api/openapi.js?136" type="text/javascript"></script>
+    <script type="text/javascript">
+        VK.init({apiId: 5737145});
+    </script>
+</head>
+<body>
+
+<script type="text/javascript">
+    function popup() {
+        VK.Auth.login(function (response) {
+            if (response.session) {
+                /* Пользователь успешно авторизовался */
+                if (response.settings) {
+                    /* Выбранные настройки доступа пользователя, если они были запрошены */
+                }
+            } else {
+                /* Пользователь нажал кнопку Отмена в окне авторизации */
+            }
+        });
+    }
+</script>
+<input type="button" value="Click Me!" onclick="popup()"><br/><br/>
+
+</body>
+</html>

@@ -1,20 +1,18 @@
 # -*- coding: utf-8 -*-
-from flask import Flask, render_template, send_from_directory, request, abort, session, redirect, url_for, g
+from flask import Flask, render_template, send_from_directory, request, abort, session, redirect, url_for, make_response
 from hashlib import md5
 from functools import wraps
-
-from flask import make_response
 import pymysql
 
 APP_ID = '5737145'
 SECRET_KEY = '2834bLZVu3IIfPtDkwI5'
-# MYSQL_USER = "kipomur"
-# MYSQL_PASS = "praiseMUR"
-# MYSQL_DB = "miptvkbot"
 MYSQL_USER = "kipomur"
 MYSQL_PASS = "praiseMUR"
 MYSQL_DB = "miptvkbot"
 SERVER_ADDRESS = "10.55.166.244"
+#MYSQL_USER = "root"
+#MYSQL_PASS = ""
+#MYSQL_DB = "test"
 
 app = Flask("Simple app")
 template_dir = 'templates'
@@ -49,7 +47,6 @@ def login_required(f):
             session.clear()
             session['next'] = request.url
             return redirect('/intro')
-
         return f(*args, **kwargs)
 
     return decorated_function
@@ -87,23 +84,45 @@ def chatPage():
     chatId = request.args.get('chatId')
     chatName = runSql("SELECT name FROM ChatNames WHERE chatId = %s" % (chatId))
     sql = """SELECT Messages.messageId, Messages.content, UserNames.name
-             FROM Messages, UserNames, ChatNames
-             WHERE Messages.chatId = ChatNames.chatId AND Messages.userId = UserNames.userId AND Messages.chatId = %s""" % (chatId)
+             FROM Messages, UserNames
+             WHERE Messages.userId = UserNames.userId AND Messages.chatId = %s""" % (chatId)
     messages = runSql(sql)
+    print(messages)
+    print()
+    print()
     concat = lambda tup, elem: tuple(list(tup) + [elem])
     messages_new = []
     for message in messages:
+        print(message)
         sql2 = "SELECT type, path, name FROM FileLinks WHERE messageId = %d" % (message[0])
         files = runSql(sql2)
-        files = [dict(zip(("type", "path", "name"), messageFile)) for messageFile in files]
-        messages_new.append(dict(zip(("messageId", "messageContent", "userName", "files"), concat(message, files))))
+        print(files)
+        # nameType = dict(zip(range(1, 6), ["photo", "video", "audio", "doc", "link"]))
+        # attachments = dict(zip(["photo", "video", "audio", "doc", "link"], [[] for i in range(6)]))
+        # nameType = dict(zip(range(1, 6), ["photo", "video", "audio", "doc", "link"]))
+        attachments = [[] for _ in range(5)]
+        for messageFile in files:
+            attachments[messageFile[0] - 1].append(dict(zip(("type", "path", "name"), messageFile)))
+        print()
+        print('attachments = ', attachments)
+        print('dict = ', dict(zip(("photo", "video", "audio", "doc", "link"), attachments)))
+        print()
+        messages_new.append(dict(zip(("messageId", "messageContent", "userName", "files"),
+                                     concat(message, dict(zip(("photo", "video", "audio", "doc", "link"), attachments))))))
+        print('concat = ', concat(message, dict(zip(("photo", "video", "audio", "doc", "link"), attachments))))
+        print('dict = ', dict(zip(("messageId", "messageContent", "userName", "files"),
+                                  concat(message, dict(zip(("photo", "video", "audio", "doc", "link"), attachments))))))
+    print()
     for message in messages_new:
         print(message)
+    # print('before')
+    # print(messages_new[0]['messageId'])
+    # print('after')
     return render_template('chat.html', messages=messages_new, chatName=chatName)
 
 
 @app.route('/intro')
-def auth():
+def intro():
     return render_template('intro.html')
 
 
@@ -112,6 +131,11 @@ def auth_success():
     session['vkid'] = request.args.get('uid')
     session['vkhash'] = request.args.get('hash')
     return redirect(session.get('next', "/"))
+
+
+@app.route('/auth')
+def auth():
+    return render_template('oauth.html')
 
 
 if __name__ == '__main__':
