@@ -46,7 +46,6 @@ def login_required(f):
             session.clear()
             session['next'] = request.url
             return redirect('/intro')
-
         return f(*args, **kwargs)
 
     return decorated_function
@@ -82,7 +81,7 @@ def runSql(sql):
 # @login_required
 def chatPage():
     chatId = request.args.get('chatId')
-    chatName = runSql("SELECT name FROM ChatNames WHERE chatId = %s" % (chatId))
+    chatName = runSql("SELECT name FROM ChatNames WHERE chatId = %s" % (chatId))[0][0]
     sql = """SELECT Messages.messageId, Messages.content, UserNames.name
              FROM Messages, UserNames, ChatNames
              WHERE Messages.chatId = ChatNames.chatId AND Messages.userId = UserNames.userId AND Messages.chatId = %s""" % (chatId)
