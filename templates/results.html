@@ -1,36 +1,35 @@
 {% extends "chat.html" %}
 {% block content %}
     results
-    {{ records }}
     <div id="messages">
 {#    {% if messages %}#}
         {% for message in messages %}
             <div class="message">
-            <p>
-                msg = {{ message["messageContent"] }}
-            </p>
-            <p>
-                username = {{ message["userName"] }}
-            </p>
-                <div class="attachment">
-                    {% for photo in message["files"]["photo"] %}
-                        <p>image</p>
-                        <p class="attimg">
-                            <p>name = {{ photo["name"] }}</p>
-                            <a href="{{ photo["path"] }}">
-                                <img src="{{ photo["path"] }}"/>
-                            </a>
-                        </p>
-                    {% endfor %}
-                    {% for other_type_name in ["video", "audio", "link", "doc"] %}
-                        {% for other in message["files"][other_type_name] %}
-                            <p class="atturl">
-                                <p>type={{ other_type_name }}</p>
-                                <a href="{{ other["path"] }}">{{ other["name"] }}</a>
-                            </p>
+                <a href="#" class="list-group-item">
+                <p>
+                    msg = {{ message["messageContent"] }}
+                </p>
+                <p>
+                    username = {{ message["userName"] }}
+                </p>
+                    <div class="attachment">
+                    <div>
+                        {% for photo in message["files"]["photo"] %}
+                            <img src="{{ photo["path"] }}"  class="img-polaroid" />
                         {% endfor %}
-                    {% endfor %}
-                </div>
+                    </div>
+                    <div>
+                        {% for other_type_name in ["video", "audio", "link", "doc"] %}
+                            {% for other in message["files"][other_type_name] %}
+                                <div class="atturl">
+{#                                    <p>type={{ other_type_name }}</p>#}
+                                    <a href="{{ other["path"] }}">{{ other["name"] }}</a>
+                                </div>
+                            {% endfor %}
+                        {% endfor %}
+                    </div>
+                    </div>
+                </a>
             </div>
         {% endfor %}
 {#    {% endif %}#}
