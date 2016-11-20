@@ -5,7 +5,7 @@
 {#    {% if messages %}#}
         {% for message in messages %}
             <div class="message">
-                <a href="#" class="list-group-item">
+                <div class="list-group-item">
                 <p>
                     msg = {{ message["messageContent"] }}
                 </p>
@@ -29,7 +29,7 @@
                         {% endfor %}
                     </div>
                     </div>
-                </a>
+                </div>
             </div>
         {% endfor %}
 {#    {% endif %}#}
