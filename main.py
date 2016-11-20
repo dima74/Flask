@@ -15,7 +15,7 @@ SERVER_ADDRESS = "10.55.166.244"
 # MYSQL_PASS = "7966915"
 # MYSQL_DB = "test"
 
-app = Flask("Simple app")
+app = Flask("Simple app", static_folder="/var/www/html")
 template_dir = 'templates'
 
 # @app.route('/home/ulyanin/')
@@ -217,4 +217,4 @@ def print_cookie():
 
 if __name__ == '__main__':
     app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
-    app.run(debug=True, host='0.0.0.0', threaded=True)
+    app.run(debug=True, host='0.0.0.0', threaded=True, port=80)
