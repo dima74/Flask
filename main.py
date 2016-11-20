@@ -192,6 +192,11 @@ def auth():
     return render_template('oauth.html')
 
 
+@app.route('/template')
+def template():
+    return render_template('template.html')
+
+
 @app.route('/print_cookie')
 def print_cookie():
     print(session)
