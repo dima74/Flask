@@ -98,7 +98,7 @@ def main():
     if not 'vkid' in session:
         return render_template('intro.html')
     else:
-        chats = runSql("SELECT ChatNames.chatId, ChatNames.name FROM ChatsToUsers, ChatNames WHERE ChatNames.chatId = ChatsToUsers.chatId and ChatsToUsers.userId = " + session['vkid'])
+        chats = runSql("SELECT ChatNames.chatId, ChatNames.name FROM ChatsToUsers, ChatNames WHERE ChatNames.chatId = ChatsToUsers.chatId and ChatsToUsers.userId = %s" % session['vkid'])
         chats = [{"name": chat[1], "url": url_for('chatPage', chatId=chat[0])} for chat in chats]
         return render_template('intro.html', chats=chats)
 
@@ -107,21 +107,19 @@ def main():
 @login_required
 def chatPage():
     chatId = request.args.get('chatId', None)
-    if chatId is None:
-        return redirect("/")
-    print("chatId =", chatId)
-    search_sring = request.args.get('search', None)
-    print(search_sring)
-    if search_sring is None or not search_sring:
-        queryFilter = ""
-    else:
-        queryFilter = """AND INSTR(Messages.content, '%s') > 0""" % search_sring
-    print(queryFilter)
-    chatName = runSql("SELECT name FROM ChatNames WHERE chatId = %s" % (chatId))
-    print("1")
+    # if chatId is None:
+    #     return redirect("/")
+    search_sring = request.args.get('search', "")
+    messageContentFilter = "AND INSTR(Messages.content, '%s') > 0" % search_sring if search_sring else ""
+    chatFilter = "AND Messages.chatId = '%s'" % chatId if chatId else "AND Messages.chatId IN (SELECT chatId FROM ChatsToUsers WHERE userId = '%s')" % session['vkid']
+    chatName = runSql("SELECT name FROM ChatNames WHERE chatId = '%s'" % chatId) if chatId else None
+    print("search_sring = ", search_sring)
+    print("chatId = ", chatId)
+    print("messageContentFilter = ", messageContentFilter)
+    print("chatFilter = ", chatFilter)
     sql = """SELECT Messages.messageId, Messages.content, UserNames.name
              FROM Messages, UserNames
-             WHERE Messages.userId = UserNames.userId AND Messages.chatId = %s %s""" % (chatId, queryFilter)
+             WHERE Messages.userId = UserNames.userId %s %s""" % (chatFilter, messageContentFilter)
     print(sql)
     messages = runSql(sql)
     # print(messages)
