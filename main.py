@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-    from flask import Flask, render_template, send_from_directory, request, abort, session, redirect, url_for, make_response
+from flask import Flask, render_template, send_from_directory, request, abort, session, redirect, url_for, make_response
 from hashlib import md5
 from functools import wraps
 import pymysql
@@ -150,7 +150,7 @@ def chatPage():
         attachments = [[] for _ in range(5)]
         for messageFile in files:
             d = dict(zip(("type", "path", "name"), messageFile))
-            if d["type"] != 5:
+            if d["type"] != 5 and d["type"] != 2:
                 d["path"] = d["path"][13:]
             attachments[messageFile[0] - 1].append(d)
         # print()
