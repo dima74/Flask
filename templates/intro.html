@@ -1,17 +1,20 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="utf-8">
-        <title>Главная страница</title>
-        <script src="https://vk.com/js/api/openapi.js?136" type="text/javascript"></script>
-        <link rel="stylesheet" type="text/css" href="../css/base.css">
-    </head>
-    <body>
-
-		<p>hash: {{ vkhash }}</p>
-		<p><a href="/secret">Secret</a></p>
-		{% if session.get('vkid', None) is none %}
-			<p><a href="/auth">Авторизация</a></p>
-		{% endif %}
-	</body>
-</html>
+{% extends "index.html" %}
+{% block intro_content %}
+    {% if session.get('vkid', None) is none %}
+        <p><a href="/auth">Авторизация</a></p>
+        Не авторизованы
+    {% else %}
+        <div class="list-group">
+            Авторизованы
+            {% for row in chats %}
+                <div class="chat">
+                    <a href="{{ row["url"] }}" class="list-group-item">
+                        <h4 class="list-group-item-heading">
+                            {{ row["name"] }}
+                        </h4>
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endblock %}
