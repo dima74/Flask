@@ -67,7 +67,7 @@ def login_required(f):
     def decorated_function(*args, **kwargs):
         if not 'vkid' in session:
             session['next'] = request.url
-            return redirect('/oauth')
+            return redirect(url_for('intro'))
 
         # if session.get('vkhash', None) != md5((APP_ID + session['vkid'] + SECRET_KEY).encode('utf-8')).hexdigest():
         #     session.clear()
@@ -76,7 +76,7 @@ def login_required(f):
         if 'vkhashpart' not in session or session.get('vkhash', None) != md5((session['vkhashpart'] + SECRET_KEY).encode('utf-8')).hexdigest():
             session.clear()
             session['next'] = request.url
-            return redirect('/oauth')
+            return redirect(url_for('intro'))
         return f(*args, **kwargs)
 
     return decorated_function
@@ -104,7 +104,7 @@ def main():
 
 
 @app.route('/chat')
-# @login_required
+@login_required
 def chatPage():
     chatId = request.args.get('chatId')
     print("chatId =", chatId)
@@ -163,11 +163,11 @@ def intro():
     return render_template('intro.html')
 
 
-@app.route('/auth-success')
-def auth_success():
-    session['vkid'] = request.args.get('uid')
-    session['vkhash'] = request.args.get('hash')
-    return redirect(session.get('next', "/"))
+# @app.route('/auth-success')
+# def auth_success():
+#     session['vkid'] = request.args.get('uid')
+#     session['vkhash'] = request.args.get('hash')
+#     return redirect(session.get('next', "/"))
 
 
 @app.route('/oauth-success')
@@ -178,16 +178,16 @@ def oauth_success():
     return redirect(session.get('next', "/"))
 
 
-@app.route('/oauth')
-def auth():
-    return render_template('oauth.html')
+# @app.route('/oauth')
+# def auth():
+#     return render_template('oauth.html')
 
 
-@app.route('/print_cookie')
-def print_cookie():
-    print(session)
-    print(request.cookies)
-    return 'test'
+# @app.route('/print_cookie')
+# def print_cookie():
+#     print(session)
+#     print(request.cookies)
+#     return 'test'
 
 
 if __name__ == '__main__':
