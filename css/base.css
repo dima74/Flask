@@ -74,5 +74,6 @@ ul.navbar-nav
 
 img.img-vkbot
 {
+    max-height: 200px;
     max-width: 200px;
 }
