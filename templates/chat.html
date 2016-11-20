@@ -23,25 +23,31 @@
             <div id="messages">
                 {% for message in messages %}
                     <div class="message">
-                        msg={{ message["messageContent"] }}
-                        {% for file in message["files"] %}
-                            <div class="attachment">
-                                <p>
-                                name = {{ file["name"] }}
-                                </p>
-                                {% if file["type"] == 1 %}
+                    <p>
+                        msg = {{ message["messageContent"] }}
+                    </p>
+                    <p>
+                        username = {{ message["userName"] }}
+                    </p>
+                        <div class="attachment">
+                            {% for photo in message["files"]["photo"] %}
+                                <p>image</p>
                                 <p class="attimg">
-                                    <a href="{{ file["path"] }}">
-                                        <img src="{{ file["path"] }}"/>
+                                    <p>name = {{ photo["name"] }}</p>
+                                    <a href="{{ photo["path"] }}">
+                                        <img src="{{ photo["path"] }}"/>
                                     </a>
                                 </p>
-                                {% else %}
-                                <p class="atturl">
-                                    <a href="{{ file["path"] }}">ссыль на Вложение</a>
-                                </p>
-                                {% endif %}
-                                </div>
-                        {% endfor %}
+                            {% endfor %}
+                            {% for other_type_name in ["video", "audio", "link", "doc"] %}
+                                {% for other in message["files"][other_type_name] %}
+                                    <p class="atturl">
+                                        <p>type={{ other_type_name }}</p>
+                                        <a href="{{ other["path"] }}">{{ other["name"] }}</a>
+                                    </p>
+                                {% endfor %}
+                            {% endfor %}
+                        </div>
                     </div>
                 {% endfor %}
             </div>
