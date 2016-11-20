@@ -53,12 +53,19 @@ def login_required(f):
     def decorated_function(*args, **kwargs):
         if not 'vkid' in session:
             session['next'] = request.url
-            return redirect(url_for('auth'))
+            return redirect('/oauth')
 
-        if session.get('vkhash', None) != md5((APP_ID + session['vkid'] + SECRET_KEY).encode('utf-8')).hexdigest():
+        # if session.get('vkhash', None) != md5((APP_ID + session['vkid'] + SECRET_KEY).encode('utf-8')).hexdigest():
+        #     session.clear()
+        #     session['next'] = request.url
+        #     return redirect('/intro')
+        print('hashpart' not in session)
+        print(session.get('vkhash', None))
+        print(md5((session['hashpart'] + SECRET_KEY).encode('utf-8')))
+        if 'hashpart' not in session or session.get('vkhash', None) != md5((session['hashpart'] + SECRET_KEY).encode('utf-8')).hexdigest():
             session.clear()
             session['next'] = request.url
-            return redirect('/intro')
+            return redirect('/oauth')
         return f(*args, **kwargs)
 
     return decorated_function
@@ -157,11 +164,26 @@ def auth_success():
     return redirect(session.get('next', "/"))
 
 
+@app.route('/oauth-success')
+def oauth_success():
+    session['vkid'] = request.args.get('uid')
+    session['vkhash'] = request.args.get('sig')
+    session['vkhashpart'] = request.args.get('hashpart')
+    return redirect(session.get('next', "/"))
+
+
 @app.route('/oauth')
 def auth():
     return render_template('oauth.html')
 
 
+@app.route('/print_cookie')
+def print_cookie():
+    print(session)
+    print(request.cookies)
+    return 'test'
+
+
 if __name__ == '__main__':
     app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
-    app.run(debug=True, host='0.0.0.0')
+    app.run(debug=True, host='0.0.0.0', port=80)

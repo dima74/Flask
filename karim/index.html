@@ -1,0 +1,125 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Меню</title>      
+  <link rel="stylesheet" href="css/bootstrap.min.css" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link href="css/base.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/sticky-footer.css">
+  <script src="js/jquery-1.11.1.min.js"></script>
+  <script src="js/bootstrap.min.js"></script>
+  <script src="js/mynavbar.js"></script>
+</head>
+<body>
+<nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-main">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="#">KPM now</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="navbar-main">
+      <ul class="nav navbar-nav">
+        <li class="active">
+          <a href="#">About <span class="sr-only">(current)</span></a>
+        </li>
+        
+      </ul>
+
+
+     
+
+     <form class="navbar-form pull-right">
+             <div class="wauth_content _wauth_content">
+    <div class="_wauth_error wauth_error" style="display: none;"></div>
+    <div class="_wauth_user_block wauth_user_block clear_fix">
+ 
+</div>
+  
+     
+   <!--<h4>  Киреев К.Р</h4>   --><button class="btn btn-primary wauth_auth _wauth_auth" onclick="WAuth.auth(this)" >Войти через ВКонтакте</button>
+
+            
+            </form>
+    </div>
+  </div>
+</nav>
+
+
+
+<div class="splash" style="background-position: 0px 0px;">
+      <div class="container">
+
+            <h1>Здесь вы найдете </h1>
+            <h1>полезную информацию из всех ваших диалогов </h1>
+
+      </div>
+    </div>
+
+<article>
+<!--<form class="navbar navbar-inner">
+        <input type="text" class="form-control" placeholder="Search">
+              </form>-->
+   
+    
+
+
+     <div class="article container">
+
+      <div class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li><input type="text" id ="sbox" class="form-control" placeholder="Попытайтесь найти"></li>
+            <li>&nbsp</li>
+              </ul>
+
+       <button type="submit" class="btn btn-primary">Поиск по всем диалогам</button> 
+      <h4>&nbsp</h4>
+      <div class="list-group">
+         <!-- {% for name, url_chat in chats %}
+                    <div class="chat">
+                    name={{ name }}
+                    <a href="{{ url_chat }}" class="list-group-item">
+                      <h4 class="list-group-item-heading">{{name}}</h4>
+                    </a>
+                    </div>
+                {% endfor %} -->
+            <a href="google.com" class="list-group-item">
+              <h4 class="list-group-item-heading">Группа 595</h4> </a>
+            <a href="#" class="list-group-item">
+              <h4 class="list-group-item-heading">Второй курс ФИВТ</h4> </a>
+            <a href="#" class="list-group-item">
+              <h4 class="list-group-item-heading">ФИВТ МФТИ</h4> </a>
+            <a href="#" class="list-group-item">
+              <h4 class="list-group-item-heading">Прога</h4></a>
+            <a href="#" class="list-group-item">
+              <h4 class="list-group-item-heading">Тупой Скат</h4> </a>
+            <a href="#" class="list-group-item">
+              <h4 class="list-group-item-heading">Летчик Леха</h4> </a>
+            <a href="#" class="list-group-item">
+              <h4 class="list-group-item-heading">Клуб любителей шахмат</h4> </a>
+            <a href="#" class="list-group-item">
+              <h4 class="list-group-item-heading">Кинцо</h4> </a>
+            <a href="#" class="list-group-item">
+              <h4 class="list-group-item-heading">Формалки</h4> 
+               </a>
+          </div>
+
+
+</div>
+</article>
+
+  <footer class="footer">
+        <div class="container">
+            <p class="text-muted">Made by KiPoMur in 2016</p>
+        </div>
+    </footer>
+</body>
+</html>
