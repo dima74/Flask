@@ -12,7 +12,9 @@
 
 <script type="text/javascript">
     function popup() {
+        alert(1);
         VK.Auth.login(function (response) {
+            alert(session);
             if (response.session) {
                 /* Пользователь успешно авторизовался */
                 if (response.settings) {
