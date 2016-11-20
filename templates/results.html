@@ -1,0 +1,37 @@
+{% extends "chat.html" %}
+{% block content %}
+    results
+    <div id="messages">
+{#    {% if messages %}#}
+        {% for message in messages %}
+            <div class="message">
+                <div class="list-group-item">
+                <p>
+                    msg = {{ message["messageContent"] }}
+                </p>
+                <p>
+                    username = {{ message["userName"] }}
+                </p>
+                    <div class="attachment">
+                    <div>
+                        {% for photo in message["files"]["photo"] %}
+                            <img src="{{ photo["path"] }}"  class="img-polaroid" />
+                        {% endfor %}
+                    </div>
+                    <div>
+                        {% for other_type_name in ["video", "audio", "link", "doc"] %}
+                            {% for other in message["files"][other_type_name] %}
+                                <div class="atturl">
+{#                                    <p>type={{ other_type_name }}</p>#}
+                                    <a href="{{ other["path"] }}">{{ other["name"] }}</a>
+                                </div>
+                            {% endfor %}
+                        {% endfor %}
+                    </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+{#    {% endif %}#}
+    </div>
+{% endblock %}

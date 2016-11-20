@@ -19,22 +19,47 @@ app = Flask("Simple app")
 template_dir = 'templates'
 
 
+def getDataBase():
+    return pymysql.connect(SERVER_ADDRESS, MYSQL_USER, MYSQL_PASS, MYSQL_DB, charset="utf8")
+
+
+@app.route('/chat/search', methods=['GET', 'POST'])
+def search():
+    print("render_search")
+    if request.method == "GET":
+        print("get")
+        db = getDataBase()
+        print("1")
+        c = db.cursor()
+        print("2")
+        print(request.form)
+        print('''select * from Messages where userId = %s''' % request.args['search'])
+        c.execute('''select * from Messages where userId = %s''' % request.args['search'])
+        print("3")
+        records = c.fetchall()
+        print("rec = ", records)
+        return render_template("results.html", records=records)
+    return render_template('chat.html')
+
+
 @app.route('/css/<path:path>')
-def send_js(path):
+def send_css(path):
     return send_from_directory('css', path)
 
 
-@app.route('/iter_data_base')
-def fetchdb():
-    db = pymysql.connect(SERVER_ADDRESS, "amarokuser", "7966915", "amarokdb", charset="utf8")
-    cursor = db.cursor()
-    sql = "SELECT * FROM genres"
-    try:
-        cursor.execute(sql)
-        rv = cursor.fetchall()
-        return render_template('iterdb.html', rv=rv)
-    except:
-        abort(501)
+@app.route('/fonts/<path:path>')
+def send_fonts(path):
+    return send_from_directory('fonts', path)
+
+
+@app.route('/js/<path:path>')
+def send_js(path):
+    return send_from_directory('js', path)
+
+
+@app.route('/img/<path:path>')
+def send_img(path):
+    return send_from_directory('img', path)
 
 
 def login_required(f):
@@ -42,37 +67,19 @@ def login_required(f):
     def decorated_function(*args, **kwargs):
         if not 'vkid' in session:
             session['next'] = request.url
-            return redirect('/oauth')
+            return redirect(url_for('intro'))
 
         # if session.get('vkhash', None) != md5((APP_ID + session['vkid'] + SECRET_KEY).encode('utf-8')).hexdigest():
         #     session.clear()
         #     session['next'] = request.url
         #     return redirect('/intro')
-        print('hashpart' not in session)
-        print(session.get('vkhash', None))
-        print(md5((session['hashpart'] + SECRET_KEY).encode('utf-8')))
-        if 'hashpart' not in session or session.get('vkhash', None) != md5((session['hashpart'] + SECRET_KEY).encode('utf-8')).hexdigest():
+        if 'vkhashpart' not in session or session.get('vkhash', None) != md5((session['vkhashpart'] + SECRET_KEY).encode('utf-8')).hexdigest():
             session.clear()
             session['next'] = request.url
-            return redirect('/oauth')
+            return redirect(url_for('intro'))
         return f(*args, **kwargs)
 
     return decorated_function
-
-
-@app.route('/')
-@login_required
-def main():
-    db = pymysql.connect(SERVER_ADDRESS, MYSQL_USER, MYSQL_PASS, MYSQL_DB, charset="utf8")
-    cursor = db.cursor()
-    sql = "SELECT chatId FROM ChatsToUsers WHERE userId = " + session['vkid']
-    try:
-        cursor.execute(sql)
-        chatIds = cursor.fetchall()
-        return render_template('index.html', rv=chatIds)
-    except:
-        abort(501)
-        # return render_template('index.html', vkhash=session.get('vkid', None))
 
 
 def runSql(sql):
@@ -86,16 +93,38 @@ def runSql(sql):
         abort(501)
 
 
+@app.route('/')
+@login_required
+def main():
+    if not 'vkid' in session:
+        return render_template('intro.html')
+    else:
+        chats = runSql("SELECT ChatNames.chatId, ChatNames.name FROM ChatsToUsers, ChatNames WHERE ChatNames.chatId = ChatsToUsers.chatId and ChatsToUsers.userId = " + session['vkid'])
+        chats = [{"name": chat[1], "url": url_for('chatPage', chatId=chat[0])} for chat in chats]
+        return render_template('index.html', chats=chats)
+
+
 @app.route('/chat')
-# @login_required
+@login_required
 def chatPage():
-    chatId = request.args.get('chatId')
+    chatId = request.args.get('chatId', None)
+    if chatId is None:
+        return redirect("/")
+    print("chatId =", chatId)
+    search_sring = request.args.get('search', None)
+    print(search_sring)
+    if search_sring is None or not search_sring:
+        queryFilter = ""
+    else:
+        queryFilter = """AND INSTR(Messages.content, '%s') > 0""" % search_sring
+    print(queryFilter)
     chatName = runSql("SELECT name FROM ChatNames WHERE chatId = %s" % (chatId))
+    print("1")
     sql = """SELECT Messages.messageId, Messages.content, UserNames.name
              FROM Messages, UserNames
-             WHERE Messages.userId = UserNames.userId AND Messages.chatId = %s""" % (chatId)
+             WHERE Messages.userId = UserNames.userId AND Messages.chatId = %s %s""" % (chatId, queryFilter)
+    print(sql)
     messages = runSql(sql)
-    # print(chatId)
     # print(messages)
     # print()
     # print()
@@ -129,7 +158,7 @@ def chatPage():
     # print('before')
     # print(messages_new[0]['messageId'])
     # print('after')
-    return render_template('chat.html', messages=messages_new, chatName=chatName)
+    return render_template('results.html', messages=messages_new, chatName=chatName)
 
 
 @app.route('/intro')
@@ -137,11 +166,11 @@ def intro():
     return render_template('intro.html')
 
 
-@app.route('/auth-success')
-def auth_success():
-    session['vkid'] = request.args.get('uid')
-    session['vkhash'] = request.args.get('hash')
-    return redirect(session.get('next', "/"))
+# @app.route('/auth-success')
+# def auth_success():
+#     session['vkid'] = request.args.get('uid')
+#     session['vkhash'] = request.args.get('hash')
+#     return redirect(session.get('next', "/"))
 
 
 @app.route('/oauth-success')
@@ -152,18 +181,18 @@ def oauth_success():
     return redirect(session.get('next', "/"))
 
 
-@app.route('/oauth')
-def auth():
-    return render_template('oauth.html')
+# @app.route('/oauth')
+# def auth():
+#     return render_template('oauth.html')
 
 
-@app.route('/print_cookie')
-def print_cookie():
-    print(session)
-    print(request.cookies)
-    return 'test'
+# @app.route('/print_cookie')
+# def print_cookie():
+#     print(session)
+#     print(request.cookies)
+#     return 'test'
 
 
 if __name__ == '__main__':
     app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
-    app.run(debug=True, host='0.0.0.0', port=80)
+    app.run(debug=True, host='0.0.0.0')

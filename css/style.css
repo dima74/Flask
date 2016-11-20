@@ -1,0 +1,108 @@
+/* цвет фона и рамки навигационного меню */
+.navbar-default {
+    background-color: #2ecc71;
+    border-color: #27ae60;
+}
+/* цвет текста, содержащий название сайта или бренда */
+.navbar-default .navbar-brand {
+    color: #ecf0f1;
+}
+/* цвет текста (название сайта или бренда), при поднесении к нему курсора мышки или при его нахождении в фокусе */
+.navbar-default .navbar-brand:hover,
+.navbar-default .navbar-brand:focus {
+    color: #d1ffed;
+}
+/* ÷вет пунктов навигационного меню */
+.navbar-default .navbar-nav > li > a {
+    color: #ecf0f1;
+}
+/* ÷вет пункта меню, при поднесении к нему курсора мышки или при его нахождении в фокусе */
+.navbar-default .navbar-nav > li > a:hover,
+.navbar-default .navbar-nav > li > a:focus {
+    color: #d1ffed;
+}
+/* ÷вет и фон активного пункта меню, а также поднесении к нему курсора мышки или при его нахождении в фокусе */
+.navbar-default .navbar-nav > .active > a, 
+.navbar-default .navbar-nav > .active > a:hover, 
+.navbar-default .navbar-nav > .active > a:focus {
+    color: #d1ffed;
+    background-color: #27ae60;
+}
+/* ÷вет и фон открытого пункта меню, а также поднесении к нему курсора мышки или при его нахождении в фокусе */
+.navbar-default .navbar-nav > .open > a, 
+.navbar-default .navbar-nav > .open > a:hover, 
+.navbar-default .navbar-nav > .open > a:focus {
+    color: #d1ffed;
+    background-color: #27ae60;
+}
+/* ÷вет стрелочки (треугольничка) у раскрывающихс€ пунктов меню */
+.navbar-default .navbar-nav > .dropdown > a .caret {
+    border-top-color: #ecf0f1;
+    border-bottom-color: #ecf0f1;
+}
+/* ÷вет стрелочки (треугольничка) при поднесении к нему курсора мышки или при его нахождении в фокусе */
+.navbar-default .navbar-nav > .dropdown > a:hover .caret,
+.navbar-default .navbar-nav > .dropdown > a:focus .caret {
+    border-top-color: #d1ffed;
+    border-bottom-color: #d1ffed;
+}
+/* ÷вет стрелочки (треугольничка), открывшегос€ пункта меню */
+.navbar-default .navbar-nav > .open > a .caret, 
+.navbar-default .navbar-nav > .open > a:hover .caret, 
+.navbar-default .navbar-nav > .open > a:focus .caret {
+    border-top-color: #d1ffed;
+    border-bottom-color: #d1ffed;
+}
+/* CSS стили дл€ мобильных устройств */
+/* ÷вет рамки у кнопки, котора€ открывает меню */
+.navbar-default .navbar-toggle {
+    border-color: #27ae60;
+}
+/* ÷вет фона кнопки (котора€ открывает меню) при поднесении к ней курсора мышки или при нахождении еЄ в фокусе */
+.navbar-default .navbar-toggle:hover,
+.navbar-default .navbar-toggle:focus {
+    background-color: #27ae60;
+}
+/* ÷вет полосочек в кнопочке, котора€ открывает меню */
+.navbar-default .navbar-toggle .icon-bar {
+    background-color: #ecf0f1;
+}
+/* ÷вет пунктов меню в раскрывающихс€ списках */
+@media (max-width: 767px) {
+    .navbar-default .navbar-nav .open .dropdown-menu > li > a {
+        color: #ecf0f1;
+  }
+/* ÷вет и фон пункта меню в раскрывающихс€ списках, при поднесении к нему курсора мышки или при нахождении его в фокусе */
+    .navbar-default .navbar-nav .open .dropdown-menu > li > a:hover,
+    .navbar-default .navbar-nav .open .dropdown-menu > li > a:focus {
+        color: #d1ffed;
+        background-color: #27ae60;
+    }
+}
+/* ќтступ дл€ меню */
+body
+{
+padding-top: 50px;
+}
+.splash { 
+/* ќтступ до содержимого splash */
+padding:9em 0 2em;
+background-image:url(../img/bg.jpg);
+/*ћасштабирует изображение с сохранением пропорций так, чтобы его ширина или высота равн€лась ширине или высоте блока.*/
+background-size:cover;
+/*—войство background-attachment устанавливает, будет ли прокручиватьс€ фоновое изображение вместе с содержимым элемента.ƒелает фоновое изображение элемента неподвижным. */
+background-attachment:fixed;
+/* ÷вет текста */
+color:#fff;
+/*выравнивание текста по центру */
+text-align:center
+}
+
+article {
+display:block;
+padding: 4em 0 3em;
+border-bottom: 1px solid rgba(0,0,0,0.05);
+background-color: #e5f9eb;
+}
+
+
