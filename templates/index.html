@@ -18,10 +18,10 @@
         <div id="content">
             <div id="search">Поиск</div>
             <div id="chats">
-                {% for name, url_chat in chats %}
+                {% for row in chats %}
                     <div class="chat">
-                    name={{ name }}
-                    <a href="{{ url_chat }}">ссыль на чат</a>
+                    name={{ row["name"] }}
+                    <a href="{{ row["url_chat"] }}">ссыль на чат</a>
                     </div>
                 {% endfor %}
             </div>

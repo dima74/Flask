@@ -84,7 +84,7 @@ def runSql(sql):
 # @login_required
 def chatPage():
     chatId = request.args.get('chatId')
-    chatName = runSql("SELECT name FROM ChatNames WHERE chatId = %s" % (chatId))
+    chatName = runSql("SELECT name FROM ChatNames WHERE chatId = %s" % (chatId))[0][0]
     sql = """SELECT Messages.messageId, Messages.content, UserNames.name
              FROM Messages, UserNames, ChatNames
              WHERE Messages.chatId = ChatNames.chatId AND Messages.userId = UserNames.userId AND Messages.chatId = %s""" % (chatId)
@@ -98,7 +98,7 @@ def chatPage():
         messages_new.append(dict(zip(("messageId", "messageContent", "userName", "files"), concat(message, files))))
     # for message in messages_new:
     #     print(message)
-    return render_template('test.html', messages=messages_new, chatName=chatName)
+    return render_template('chat.html', messages=messages_new, chatName=chatName)
 
 
 @app.route('/intro')

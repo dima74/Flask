@@ -14,25 +14,33 @@
                 Здесь логотип
             </div>
             КОНЕЦ ШАПКИ
+            <div id="chatname">
+                <h1>{{ chatName }}</h1>
+            </div>
         </div>
         <div id="content">
             <div id="search">Поиск</div>
             <div id="messages">
-                {% for message_id, attachments in messages %}
+                {% for message in messages %}
                     <div class="message">
-                        msg={{ message_id }}
-                        {% for type, name, internal_url in attachments %}
+                        msg={{ message["messageContent"] }}
+                        {% for file in message["files"] %}
                             <div class="attachment">
-                            <p>
-                            type = {{ type }}
-                            </p>
-                            <p>
-                            name = {{ name }}
-                            </p>
-                            <p>
-                            <a href="{{ internal_url }}">ссыль на Вложение</a>
-                            </p>
-                            </div>
+                                <p>
+                                name = {{ file["name"] }}
+                                </p>
+                                {% if file["type"] == 1 %}
+                                <p class="attimg">
+                                    <a href="{{ file["path"] }}">
+                                        <img src="{{ file["path"] }}"/>
+                                    </a>
+                                </p>
+                                {% else %}
+                                <p class="atturl">
+                                    <a href="{{ file["path"] }}">ссыль на Вложение</a>
+                                </p>
+                                {% endif %}
+                                </div>
                         {% endfor %}
                     </div>
                 {% endfor %}
