@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
-from flask import Flask, render_template, send_from_directory, request, abort, session, redirect, url_for, g
+from flask import Flask, render_template, send_from_directory, request, abort, session, redirect, url_for, make_response
 from hashlib import md5
 from functools import wraps
-
-from flask import make_response
 import pymysql
 
 APP_ID = '5737145'
@@ -98,7 +96,7 @@ def chatPage():
         messages_new.append(dict(zip(("messageId", "messageContent", "userName", "files"), concat(message, files))))
     # for message in messages_new:
     #     print(message)
-    return render_template('test.html', messages=messages_new, chatName=chatName)
+    return render_template('chat.html', messages=messages_new, chatName=chatName)
 
 
 @app.route('/intro')
