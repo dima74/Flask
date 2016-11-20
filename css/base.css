@@ -2,3 +2,60 @@ ul.link-item
 {
     list-style-image: url('/img/linkki-ikoni_small.png');
 }
+
+#logoheader
+{
+    padding: 75px 10px;
+}
+
+.splash
+{
+    padding: 10px;
+}
+
+.panel-body
+{
+    padding: 15px 0px;
+}
+
+blockquote
+{
+    margin:auto 15px;
+}
+
+div.navbar-header
+{
+    padding-left: 60px;
+}
+
+.article .collapse
+{
+    padding-left: 0px;
+}
+
+body, html {
+    margin: 0px;
+    background-color: #e5f9eb;
+}
+
+#all, #main {
+    margin: 0;
+    height: 100%;
+}
+
+body
+{
+    padding-bottom: 0px;
+}
+
+#all
+{
+    min-height: 100%;
+}
+
+article
+{
+    border: none;
+    min-height: 100%;
+    padding-bottom: 100px;
+}
