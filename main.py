@@ -149,7 +149,9 @@ def chatPage():
     tuple_append = lambda tup, elem: tuple(list(tup) + [elem])
     print(3)
     messages_new = []
+    print(4)
     for message in messages:
+        print(5)
         # print(message)
         sql2 = "SELECT type, path, name FROM FileLinks WHERE messageId = %d" % (message[0])
         files = runSql(sql2)
@@ -180,6 +182,7 @@ def chatPage():
     # print('before')
     # print(messages_new[0]['messageId'])
     # print('after')
+    print('end')
     return render_template('results.html', messages=messages_new, chatName=chatName)
 
 
